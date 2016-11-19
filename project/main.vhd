@@ -51,12 +51,12 @@ entity main is
            PS2KB_DATA : in  STD_LOGIC;
            RAM1DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
            SW_DIP : in  STD_LOGIC_VECTOR (15 downto 0);
-           FLASH_BYTE# : out  STD_LOGIC;
+           FLASH_BYTE : out  STD_LOGIC;
            FLASH_CE : out  STD_LOGIC;
            FLASH_CE1 : out  STD_LOGIC;
            FLASH_CE2 : out  STD_LOGIC;
            FLASH_OE : out  STD_LOGIC;
-           FLASH_RP# : out  STD_LOGIC;
+           FLASH_RP : out  STD_LOGIC;
            FLASH_STS : out  STD_LOGIC;
            FLASH_VPEN : out  STD_LOGIC;
            FLASH_WE : out  STD_LOGIC;
