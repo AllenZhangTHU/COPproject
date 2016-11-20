@@ -61,8 +61,6 @@ begin
 		variable tmp : STD_LOGIC_VECTOR (15 downto 0);
 	begin
 		case Inst(15 downto 11) is
-			when "00000" =>
-				null;
 			when "00001" => --NOP
 				OP <= "1111";
 				Wctrl <= "1111";
@@ -93,8 +91,6 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
-			when "00011" =>
-				null;
 			when "00100" => --BEQZ
 				OP <= "1111";
 				Wctrl <= "1111";
@@ -166,10 +162,21 @@ begin
 						regWE <= '1';
 						DataIN <= "0000000000000000";
 					when others =>
-						null;
+						OP <= "1111";
+						Wctrl <= "1111";
+						PCctrl <= "00";
+						RFctrl <= "000";
+						Immctrl <= "0000";
+						Rs <= "1111";
+						Rt <= "1111";
+						Rd <= "1111";
+						ctrl1 <= '0';
+						ctrl2 <= '0';
+						AccMEM <= '0';
+						memWE <= '0';
+						regWE <= '0';
+						DataIN <= "0000000000000000";
 				end case;
-			when "00111" =>
-				null;
 			when "01000" => --ADDIU3
 				OP <= "0000";
 				Wctrl <= "0" & Inst(7 downto 5);
@@ -217,8 +224,6 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
-			when "01011" =>
-				null;
 			when "01100" => --ADDSP|BTEQZ|MTSP
 				case Inst(10 downto 8) is
 					when "011" => --ADDSP
@@ -271,7 +276,20 @@ begin
 						regWE <= '1';
 						DataIN <= "0000000000000000";
 					when others =>
-						null;
+						OP <= "1111";
+						Wctrl <= "1111";
+						PCctrl <= "00";
+						RFctrl <= "000";
+						Immctrl <= "0000";
+						Rs <= "1111";
+						Rt <= "1111";
+						Rd <= "1111";
+						ctrl1 <= '0';
+						ctrl2 <= '0';
+						AccMEM <= '0';
+						memWE <= '0';
+						regWE <= '0';
+						DataIN <= "0000000000000000";
 				end case;
 			when "01101" => --LI
 				OP <= "1011";
@@ -288,8 +306,6 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
-			when "01110" =>
-				null;
 			when "01111" => --MOVE
 				OP <= "1010";
 				Wctrl <= "0" & Inst(10 downto 8);
@@ -305,10 +321,6 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
-			when "10000" =>
-				null;
-			when "10001" =>
-				null;
 			when "10010" => --LW_SP
 				OP <= "0000";
 				Wctrl <= "0" & Inst(10 downto 8);
@@ -339,18 +351,6 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
-			when "10100" =>
-				null;
-			when "10101" =>
-				null;
-			when "10110" =>
-				null;
-			when "10111" =>
-				null;
-			when "11000" =>
-				null;
-			when "11001" =>
-				null;
 			when "11010" => --SW_SP
 				OP <= "0000";
 				Wctrl <= "1111";
@@ -414,7 +414,20 @@ begin
 						regWE <= '1';
 						DataIN <= "0000000000000000";
 					when others =>
-						null;
+						OP <= "1111";
+						Wctrl <= "1111";
+						PCctrl <= "00";
+						RFctrl <= "000";
+						Immctrl <= "0000";
+						Rs <= "1111";
+						Rt <= "1111";
+						Rd <= "1111";
+						ctrl1 <= '0';
+						ctrl2 <= '0';
+						AccMEM <= '0';
+						memWE <= '0';
+						regWE <= '0';
+						DataIN <= "0000000000000000";
 				end case;
 			when "11101" => --AND|CMP|JR|JALR|JRRA|MFPC|NOT|OR
 				case Inst(4 downto 0) is
@@ -516,7 +529,20 @@ begin
 								regWE <= '1';
 								DataIN <= "0000000000000000";
 							when others =>
-								null;
+								OP <= "1111";
+								Wctrl <= "1111";
+								PCctrl <= "00";
+								RFctrl <= "000";
+								Immctrl <= "0000";
+								Rs <= "1111";
+								Rt <= "1111";
+								Rd <= "1111";
+								ctrl1 <= '0';
+								ctrl2 <= '0';
+								AccMEM <= '0';
+								memWE <= '0';
+								regWE <= '0';
+								DataIN <= "0000000000000000";
 						end case;
 					when "01111" => --NOT
 						OP <= "0101";
@@ -549,7 +575,20 @@ begin
 						regWE <= '1';
 						DataIN <= "0000000000000000";
 					when others =>
-						null;
+						OP <= "1111";
+						Wctrl <= "1111";
+						PCctrl <= "00";
+						RFctrl <= "000";
+						Immctrl <= "0000";
+						Rs <= "1111";
+						Rt <= "1111";
+						Rd <= "1111";
+						ctrl1 <= '0';
+						ctrl2 <= '0';
+						AccMEM <= '0';
+						memWE <= '0';
+						regWE <= '0';
+						DataIN <= "0000000000000000";
 				end case;
 			when "11110" => --MFIH|MTIH
 				case Inst(0) is
@@ -584,12 +623,36 @@ begin
 						regWE <= '1';
 						DataIN <= "0000000000000000";
 					when others =>
-						null;
+						OP <= "1111";
+						Wctrl <= "1111";
+						PCctrl <= "00";
+						RFctrl <= "000";
+						Immctrl <= "0000";
+						Rs <= "1111";
+						Rt <= "1111";
+						Rd <= "1111";
+						ctrl1 <= '0';
+						ctrl2 <= '0';
+						AccMEM <= '0';
+						memWE <= '0';
+						regWE <= '0';
+						DataIN <= "0000000000000000";
 				end case;
-			when "11111" =>
-				null;
 			when others =>
-				null;
+				OP <= "1111";
+				Wctrl <= "1111";
+				PCctrl <= "00";
+				RFctrl <= "000";
+				Immctrl <= "0000";
+				Rs <= "1111";
+				Rt <= "1111";
+				Rd <= "1111";
+				ctrl1 <= '0';
+				ctrl2 <= '0';
+				AccMEM <= '0';
+				memWE <= '0';
+				regWE <= '0';
+				DataIN <= "0000000000000000";
 		end case;
 	end process;
 				
