@@ -47,6 +47,7 @@ end IM;
 architecture Behavioral of IM is
 begin
 	Ram2WE <= '1';
+	Ram2Addr(17 downto 16) <= "00";
 	process(clk, rst)
 		variable state : std_logic := '0';
 		variable savedPC : std_logic_vector (15 downto 0) := "1111111111111111";
@@ -57,13 +58,13 @@ begin
 					savedPC := PC;
 					Ram2OE <= '0';
 					Ram2EN <= '0';
-					Ram2Addr <= "00" & savedPC;
+					Ram2Addr(15 downto 0) <= savedPC;
 					Ram2Data <= "ZZZZZZZZZZZZZZZZ";
 					state := '1';
 				else
 					Ram2OE <= '1';
 					Ram2EN <= '1';
-					Ram2Addr <= "00" & savedPC;
+					Ram2Addr(15 downto 0) <= savedPC;
 					Ram2Data <= "ZZZZZZZZZZZZZZZZ";
 				end if;
 			else

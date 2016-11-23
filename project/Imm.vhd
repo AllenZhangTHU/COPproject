@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Imm is
     Port ( Immctrl : in  STD_LOGIC_VECTOR (3 downto 0);
-           Inst : in  STD_LOGIC_VECTOR (15 downto 0);
+           Inst : in  STD_LOGIC_VECTOR (10 downto 0);
            Imm : out  STD_LOGIC_VECTOR (15 downto 0));
 end Imm;
 
