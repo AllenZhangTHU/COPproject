@@ -42,3 +42,6 @@
 *.
 *.
 project/isim
+*.nlf
+project/netgen
+*_pad.txt

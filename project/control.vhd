@@ -38,7 +38,6 @@ entity control is
            Imm : in  STD_LOGIC_VECTOR (15 downto 0);
            T : in  STD_LOGIC;
            OP : out  STD_LOGIC_VECTOR (3 downto 0);
-           Wctrl : out  STD_LOGIC_VECTOR (3 downto 0);
            PCctrl : out  STD_LOGIC_VECTOR (1 downto 0);
            RFctrl : out  STD_LOGIC_VECTOR (2 downto 0);
            Immctrl : out  STD_LOGIC_VECTOR (3 downto 0);
@@ -51,7 +50,8 @@ entity control is
            memWE : out  STD_LOGIC;
            regWE : out  STD_LOGIC;
            DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
-           newT : out  STD_LOGIC);
+           newT : out  STD_LOGIC;
+           TE : out STD_LOGIC);
 end control;
 
 architecture Behavioral of control is
@@ -63,7 +63,6 @@ begin
 		case Inst(15 downto 11) is
 			when "00001" => --NOP
 				OP <= "1111";
-				Wctrl <= "1111";
 				PCctrl <= "00";
 				RFctrl <= "000";
 				Immctrl <= "0000";
@@ -76,9 +75,10 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "00010" => --B
 				OP <= "1111";
-				Wctrl <= "1111";
 				PCctrl <= "01";
 				RFctrl <= "000";
 				Immctrl <= "0011";
@@ -91,9 +91,10 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "00100" => --BEQZ
 				OP <= "1111";
-				Wctrl <= "1111";
 				if (A="0000000000000000") then
 					PCctrl <= "01";
 				else
@@ -110,9 +111,10 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "00101" => --BNEZ
 				OP <= "1111";
-				Wctrl <= "1111";
 				if (A="0000000000000000") then
 					PCctrl <= "00";
 				else
@@ -129,11 +131,12 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "00110" => --SLL|SRA
 				case Inst(1 downto 0) is
 					when "00" => --SLL
 						OP <= "0110";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "001";
 						Immctrl <= "0111";
@@ -146,9 +149,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "11" => --SRA
 						OP <= "1000";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "001";
 						Immctrl <= "0111";
@@ -161,9 +165,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when others =>
 						OP <= "1111";
-						Wctrl <= "1111";
 						PCctrl <= "00";
 						RFctrl <= "000";
 						Immctrl <= "0000";
@@ -176,10 +181,11 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 				end case;
 			when "01000" => --ADDIU3
 				OP <= "0000";
-				Wctrl <= "0" & Inst(7 downto 5);
 				PCctrl <= "00";
 				RFctrl <= "001";
 				Immctrl <= "0010";
@@ -192,9 +198,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "01001" => --ADDIU
 				OP <= "0000";
-				Wctrl <= "0" & Inst(10 downto 8);
 				PCctrl <= "00";
 				RFctrl <= "001";
 				Immctrl <= "0001";
@@ -207,9 +214,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "01010" => --SLTI
 				OP <= "1111";
-				Wctrl <= "1111";
 				tmp := A - Imm;
 				newT <= tmp(15);
 				PCctrl <= "00";
@@ -224,11 +232,11 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				TE <= '1';
 			when "01100" => --ADDSP|BTEQZ|MTSP
 				case Inst(10 downto 8) is
 					when "011" => --ADDSP
 						OP <= "0000";
-						Wctrl <= "1000";
 						PCctrl <= "00";
 						RFctrl <= "100";
 						Immctrl <= "0001";
@@ -241,9 +249,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "000" => --BTEQZ
 						OP <= "1111";
-						Wctrl <= "1111";
 						if (T='0') then
 							PCctrl <= "01";
 						else
@@ -260,9 +269,10 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "100" => --MTSP
 						OP <= "1010";
-						Wctrl <= "1000";
 						PCctrl <= "00";
 						RFctrl <= "011";
 						Immctrl <= "0000";
@@ -275,9 +285,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when others =>
 						OP <= "1111";
-						Wctrl <= "1111";
 						PCctrl <= "00";
 						RFctrl <= "000";
 						Immctrl <= "0000";
@@ -290,10 +301,11 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 				end case;
 			when "01101" => --LI
 				OP <= "1011";
-				Wctrl <= "0" & Inst(10 downto 8);
 				PCctrl <= "00";
 				RFctrl <= "000";
 				Immctrl <= "0100";
@@ -306,9 +318,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "01111" => --MOVE
 				OP <= "1010";
-				Wctrl <= "0" & Inst(10 downto 8);
 				PCctrl <= "00";
 				RFctrl <= "011";
 				Immctrl <= "0000";
@@ -321,9 +334,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "10010" => --LW_SP
 				OP <= "0000";
-				Wctrl <= "0" & Inst(10 downto 8);
 				PCctrl <= "00";
 				RFctrl <= "100";
 				Immctrl <= "0001";
@@ -336,9 +350,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "10011" => --LW
 				OP <= "0000";
-				Wctrl <= "0" & Inst(7 downto 5);
 				PCctrl <= "00";
 				RFctrl <= "001";
 				Immctrl <= "0101";
@@ -351,9 +366,10 @@ begin
 				memWE <= '0';
 				regWE <= '1';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 			when "11010" => --SW_SP
 				OP <= "0000";
-				Wctrl <= "1111";
 				PCctrl <= "00";
 				RFctrl <= "111";
 				Immctrl <= "0001";
@@ -366,9 +382,10 @@ begin
 				memWE <= '1';
 				regWE <= '0';
 				DataIN <= B;
+				newT <= '0';
+				TE <= '0';
 			when "11011" => --SW
 				OP <= "0000";
-				Wctrl <= "1111";
 				PCctrl <= "00";
 				RFctrl <= "010";
 				Immctrl <= "0101";
@@ -381,11 +398,12 @@ begin
 				memWE <= '1';
 				regWE <= '0';
 				DataIN <= B;
+				newT <= '0';
+				TE <= '0';
 			when "11100" => --ADDU|SUBU
 				case Inst(1 downto 0) is
 					when "01" => --ADDU
 						OP <= "0000";
-						Wctrl <= "0" & Inst(4 downto 2);
 						PCctrl <= "00";
 						RFctrl <= "010";
 						Immctrl <= "0000";
@@ -398,9 +416,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "11" => --SUBU
 						OP <= "0001";
-						Wctrl <= "0" & Inst(4 downto 2);
 						PCctrl <= "00";
 						RFctrl <= "010";
 						Immctrl <= "0000";
@@ -413,9 +432,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when others =>
 						OP <= "1111";
-						Wctrl <= "1111";
 						PCctrl <= "00";
 						RFctrl <= "000";
 						Immctrl <= "0000";
@@ -428,12 +448,13 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 				end case;
 			when "11101" => --AND|CMP|JR|JALR|JRRA|MFPC|NOT|OR
 				case Inst(4 downto 0) is
 					when "01100" => --AND
 						OP <= "0010";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "010";
 						Immctrl <= "0000";
@@ -446,9 +467,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "01010" => --CMP
 						OP <= "1111";
-						Wctrl <= "1111";
 						if (A=B) then
 							newT <= '0';
 						else
@@ -466,11 +488,11 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						TE <= '1';
 					when "00000" => --JR|JALR|JRRA|MFPC
 						case Inst(7 downto 5) is
 							when "000" => --JR
 								OP <= "1111";
-								Wctrl <= "1111";
 								PCctrl <= "11";
 								RFctrl <= "001";
 								Immctrl <= "0000";
@@ -483,9 +505,10 @@ begin
 								memWE <= '0';
 								regWE <= '0';
 								DataIN <= "0000000000000000";
+								newT <= '0';
+								TE <= '0';
 							when "110" => --JALR
 								OP <= "0000";
-								Wctrl <= "1010";
 								PCctrl <= "11";
 								RFctrl <= "001";
 								Immctrl <= "1000";
@@ -498,9 +521,10 @@ begin
 								memWE <= '0';
 								regWE <= '1';
 								DataIN <= "0000000000000000";
+								newT <= '0';
+								TE <= '0';
 							when "001" => --JRRA
 								OP <= "1111";
-								Wctrl <= "1111";
 								PCctrl <= "11";
 								RFctrl <= "101";
 								Immctrl <= "0000";
@@ -513,9 +537,10 @@ begin
 								memWE <= '0';
 								regWE <= '0';
 								DataIN <= "0000000000000000";
+								newT <= '0';
+								TE <= '0';
 							when "010" => --MFPC
 								OP <= "0001";
-								Wctrl <= "0" & Inst(10 downto 8);
 								PCctrl <= "00";
 								RFctrl <= "000";
 								Immctrl <= "1000";
@@ -528,9 +553,10 @@ begin
 								memWE <= '0';
 								regWE <= '1';
 								DataIN <= "0000000000000000";
+								newT <= '0';
+								TE <= '0';
 							when others =>
 								OP <= "1111";
-								Wctrl <= "1111";
 								PCctrl <= "00";
 								RFctrl <= "000";
 								Immctrl <= "0000";
@@ -543,10 +569,11 @@ begin
 								memWE <= '0';
 								regWE <= '0';
 								DataIN <= "0000000000000000";
+								newT <= '0';
+								TE <= '0';
 						end case;
 					when "01111" => --NOT
 						OP <= "0101";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "011";
 						Immctrl <= "0000";
@@ -559,9 +586,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when "01101" => --OR
 						OP <= "0011";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "010";
 						Immctrl <= "0000";
@@ -574,9 +602,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when others =>
 						OP <= "1111";
-						Wctrl <= "1111";
 						PCctrl <= "00";
 						RFctrl <= "000";
 						Immctrl <= "0000";
@@ -589,12 +618,13 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 				end case;
 			when "11110" => --MFIH|MTIH
 				case Inst(0) is
 					when '0' => --MFIH
 						OP <= "1010";
-						Wctrl <= "0" & Inst(10 downto 8);
 						PCctrl <= "00";
 						RFctrl <= "110";
 						Immctrl <= "0000";
@@ -607,9 +637,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when '1' => --MTIH
 						OP <= "1010";
-						Wctrl <= "1001";
 						PCctrl <= "00";
 						RFctrl <= "001";
 						Immctrl <= "0000";
@@ -622,9 +653,10 @@ begin
 						memWE <= '0';
 						regWE <= '1';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 					when others =>
 						OP <= "1111";
-						Wctrl <= "1111";
 						PCctrl <= "00";
 						RFctrl <= "000";
 						Immctrl <= "0000";
@@ -637,10 +669,11 @@ begin
 						memWE <= '0';
 						regWE <= '0';
 						DataIN <= "0000000000000000";
+						newT <= '0';
+						TE <= '0';
 				end case;
 			when others =>
 				OP <= "1111";
-				Wctrl <= "1111";
 				PCctrl <= "00";
 				RFctrl <= "000";
 				Immctrl <= "0000";
@@ -653,6 +686,8 @@ begin
 				memWE <= '0';
 				regWE <= '0';
 				DataIN <= "0000000000000000";
+				newT <= '0';
+				TE <= '0';
 		end case;
 	end process;
 				

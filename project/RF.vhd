@@ -36,8 +36,8 @@ entity RF is
     Port ( regWE : in  STD_LOGIC;
            RFctrl : in  STD_LOGIC_VECTOR (2 downto 0);
            MEMOUT : in  STD_LOGIC_VECTOR (15 downto 0);
-           Wctrl : in  STD_LOGIC_VECTOR (3 downto 0);
-           Inst : in STD_LOGIC_VECTOR (15 downto 0);
+           Rd : in  STD_LOGIC_VECTOR (3 downto 0);
+           Inst : in STD_LOGIC_VECTOR (5 downto 0);
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
@@ -57,17 +57,17 @@ architecture Behavioral of RF is
 	signal SP : std_logic_vector (15 downto 0) := "0000000000000000";
 	signal RA : std_logic_vector (15 downto 0) := "0000000000000000";
 begin
-	process(RFctrl, Inst, R0, R1, R2, R3, R4, R5, R6, R7, IH, SP, RA, Wctrl, regWE, MEMOUT)
+	process(RFctrl, Inst, R0, R1, R2, R3, R4, R5, R6, R7, IH, SP, RA, regWE, MEMOUT, Rd)
 	begin
 		case RFctrl is
 			when "000" =>
 				A <= "0000000000000000";
 				B <= "0000000000000000";
 			when "001" =>
-				if (("0" & Inst(10 downto 8)) = Wctrl and regWE = '1') then
+				if (("0" & Inst(5 downto 3)) = Rd and regWE = '1') then
 					A <= MEMOUT;
 				else
-					case Inst(10 downto 8) is
+					case Inst(5 downto 3) is
 						when "000" => A <= R0;
 						when "001" => A <= R1;
 						when "010" => A <= R2;
@@ -81,10 +81,10 @@ begin
 				end if;
 				B <= "0000000000000000";
 			when "010" =>
-				if (("0" & Inst(10 downto 8)) = Wctrl and regWE = '1') then
+				if (("0" & Inst(5 downto 3)) = Rd and regWE = '1') then
 					A <= MEMOUT;
 				else
-					case Inst(10 downto 8) is
+					case Inst(5 downto 3) is
 						when "000" => A <= R0;
 						when "001" => A <= R1;
 						when "010" => A <= R2;
@@ -96,10 +96,10 @@ begin
 						when others => A <= "0000000000000000";
 					end case;
 				end if;
-				if (("0" & Inst(7 downto 5)) = Wctrl and regWE = '1') then
+				if (("0" & Inst(2 downto 0)) = Rd and regWE = '1') then
 					B <= MEMOUT;
 				else
-					case Inst(7 downto 5) is
+					case Inst(2 downto 0) is
 						when "000" => B <= R0;
 						when "001" => B <= R1;
 						when "010" => B <= R2;
@@ -112,10 +112,10 @@ begin
 					end case;
 				end if;
 			when "011" =>
-				if (("0" & Inst(7 downto 5)) = Wctrl and regWE = '1') then
+				if (("0" & Inst(2 downto 0)) = Rd and regWE = '1') then
 					A <= MEMOUT;
 				else
-					case Inst(7 downto 5) is
+					case Inst(2 downto 0) is
 						when "000" => A <= R0;
 						when "001" => A <= R1;
 						when "010" => A <= R2;
@@ -129,36 +129,36 @@ begin
 				end if;
 				B <= "0000000000000000";
 			when "100" =>
-				if (Wctrl = "1000" and regWE = '1') then
+				if (Rd = "1000" and regWE = '1') then
 					A <= MEMOUT;
 				else
 					A <= SP;
 				end if;
 				B <= "0000000000000000";
 			when "101" =>
-				if (Wctrl = "1010" and regWE = '1') then
+				if (Rd = "1010" and regWE = '1') then
 					A <= MEMOUT;
 				else
 					A <= RA;
 				end if;
 				B <= "0000000000000000";
 			when "110" =>
-				if (Wctrl = "1001" and regWE = '1') then
+				if (Rd = "1001" and regWE = '1') then
 					A <= MEMOUT;
 				else
 					A <= IH;
 				end if;
 				B <= "0000000000000000";
 			when "111" =>
-				if (Wctrl = "1000" and regWE = '1') then
+				if (Rd = "1000" and regWE = '1') then
 					A <= MEMOUT;
 				else
 					A <= SP;
 				end if;
-				if (("0" & Inst(10 downto 8)) = Wctrl and regWE = '1') then
+				if (("0" & Inst(5 downto 3)) = Rd and regWE = '1') then
 					B <= MEMOUT;
 				else
-					case Inst(10 downto 8) is
+					case Inst(5 downto 3) is
 						when "000" => B <= R0;
 						when "001" => B <= R1;
 						when "010" => B <= R2;
@@ -180,7 +180,7 @@ begin
 	begin
 		if (clk'event and clk = '1') then
 			if (regWE = '1') then
-				case Wctrl is
+				case Rd is
 					when "0000" => R0 <= MEMOUT;
 					when "0001" => R1 <= MEMOUT;
 					when "0010" => R2 <= MEMOUT;
