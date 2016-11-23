@@ -37,6 +37,7 @@ entity control is
            B : in  STD_LOGIC_VECTOR (15 downto 0);
            Imm : in  STD_LOGIC_VECTOR (15 downto 0);
            T : in  STD_LOGIC;
+			  NPC : in STD_LOGIC_VECTOR (15 downto 0);
            OP : out  STD_LOGIC_VECTOR (3 downto 0);
            PCctrl : out  STD_LOGIC_VECTOR (1 downto 0);
            RFctrl : out  STD_LOGIC_VECTOR (2 downto 0);
@@ -57,7 +58,7 @@ end control;
 architecture Behavioral of control is
 
 begin
-	process(Inst, A, B, Imm, T)
+	process(Inst, A, B, Imm, T, NPC)
 		variable tmp : STD_LOGIC_VECTOR (15 downto 0);
 	begin
 		case Inst(15 downto 11) is
@@ -69,8 +70,8 @@ begin
 				Rs <= "1111";
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
@@ -85,8 +86,8 @@ begin
 				Rs <= "1111";
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
@@ -105,8 +106,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
@@ -125,8 +126,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
@@ -143,8 +144,8 @@ begin
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '1';
+						ALUIN1 <= A;
+						ALUIN2 <= Imm;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -159,8 +160,8 @@ begin
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '1';
+						ALUIN1 <= A;
+						ALUIN2 <= Imm;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -175,8 +176,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -192,8 +193,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "0" & Inst(7 downto 5);
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '1';
@@ -208,8 +209,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "0" & Inst(10 downto 8);
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '1';
@@ -226,8 +227,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
@@ -243,8 +244,8 @@ begin
 						Rs <= "1000";
 						Rt <= "1111";
 						Rd <= "1000";
-						ctrl1 <= '0';
-						ctrl2 <= '1';
+						ALUIN1 <= A;
+						ALUIN2 <= Imm;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -263,8 +264,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -279,8 +280,8 @@ begin
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
 						Rd <= "1000";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -295,8 +296,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -312,8 +313,8 @@ begin
 				Rs <= "1111";
 				Rt <= "1111";
 				Rd <= "0" & Inst(10 downto 8);
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '1';
@@ -328,8 +329,8 @@ begin
 				Rs <= "0" & Inst(7 downto 5);
 				Rt <= "1111";
 				Rd <= "0" & Inst(10 downto 8);
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '1';
@@ -344,8 +345,8 @@ begin
 				Rs <= "1000";
 				Rt <= "1111";
 				Rd <= "0" & Inst(10 downto 8);
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '1';
 				memWE <= '0';
 				regWE <= '1';
@@ -360,8 +361,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "1111";
 				Rd <= "0" & Inst(7 downto 5);
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '1';
 				memWE <= '0';
 				regWE <= '1';
@@ -376,8 +377,8 @@ begin
 				Rs <= "1000";
 				Rt <= "0" & Inst(10 downto 8);
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '0';
 				memWE <= '1';
 				regWE <= '0';
@@ -392,8 +393,8 @@ begin
 				Rs <= "0" & Inst(10 downto 8);
 				Rt <= "0" & Inst(7 downto 5);
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '1';
+				ALUIN1 <= A;
+				ALUIN2 <= Imm;
 				AccMEM <= '0';
 				memWE <= '1';
 				regWE <= '0';
@@ -410,8 +411,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "0" & Inst(7 downto 5);
 						Rd <= "0" & Inst(4 downto 2);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -426,8 +427,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "0" & Inst(7 downto 5);
 						Rd <= "0" & Inst(4 downto 2);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -442,8 +443,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -461,8 +462,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "0" & Inst(7 downto 5);
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -482,8 +483,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "0" & Inst(7 downto 5);
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -499,8 +500,8 @@ begin
 								Rs <= "0" & Inst(10 downto 8);
 								Rt <= "1111";
 								Rd <= "1111";
-								ctrl1 <= '0';
-								ctrl2 <= '0';
+								ALUIN1 <= A;
+								ALUIN2 <= B;
 								AccMEM <= '0';
 								memWE <= '0';
 								regWE <= '0';
@@ -515,8 +516,8 @@ begin
 								Rs <= "0" & Inst(10 downto 8);
 								Rt <= "1111";
 								Rd <= "1010";
-								ctrl1 <= '1';
-								ctrl2 <= '1';
+								ALUIN1 <= NPC;
+								ALUIN2 <= Imm;
 								AccMEM <= '0';
 								memWE <= '0';
 								regWE <= '1';
@@ -531,8 +532,8 @@ begin
 								Rs <= "1010";
 								Rt <= "1111";
 								Rd <= "1111";
-								ctrl1 <= '0';
-								ctrl2 <= '0';
+								ALUIN1 <= A;
+								ALUIN2 <= B;
 								AccMEM <= '0';
 								memWE <= '0';
 								regWE <= '0';
@@ -547,8 +548,8 @@ begin
 								Rs <= "1111";
 								Rt <= "1111";
 								Rd <= "0" & Inst(10 downto 8);
-								ctrl1 <= '1';
-								ctrl2 <= '1';
+								ALUIN1 <= NPC;
+								ALUIN2 <= Imm;
 								AccMEM <= '0';
 								memWE <= '0';
 								regWE <= '1';
@@ -563,8 +564,8 @@ begin
 								Rs <= "1111";
 								Rt <= "1111";
 								Rd <= "1111";
-								ctrl1 <= '0';
-								ctrl2 <= '0';
+								ALUIN1 <= A;
+								ALUIN2 <= B;
 								AccMEM <= '0';
 								memWE <= '0';
 								regWE <= '0';
@@ -580,8 +581,8 @@ begin
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -596,8 +597,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "0" & Inst(7 downto 5);
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -612,8 +613,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -631,8 +632,8 @@ begin
 						Rs <= "1001";
 						Rt <= "1111";
 						Rd <= "0" & Inst(10 downto 8);
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -647,8 +648,8 @@ begin
 						Rs <= "0" & Inst(10 downto 8);
 						Rt <= "1111";
 						Rd <= "1001";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '1';
@@ -663,8 +664,8 @@ begin
 						Rs <= "1111";
 						Rt <= "1111";
 						Rd <= "1111";
-						ctrl1 <= '0';
-						ctrl2 <= '0';
+						ALUIN1 <= A;
+						ALUIN2 <= B;
 						AccMEM <= '0';
 						memWE <= '0';
 						regWE <= '0';
@@ -680,8 +681,8 @@ begin
 				Rs <= "1111";
 				Rt <= "1111";
 				Rd <= "1111";
-				ctrl1 <= '0';
-				ctrl2 <= '0';
+				ALUIN1 <= A;
+				ALUIN2 <= B;
 				AccMEM <= '0';
 				memWE <= '0';
 				regWE <= '0';
