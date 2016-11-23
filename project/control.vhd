@@ -44,12 +44,12 @@ entity control is
            Rs : out  STD_LOGIC_VECTOR (3 downto 0);
            Rt : out  STD_LOGIC_VECTOR (3 downto 0);
            Rd : out  STD_LOGIC_VECTOR (3 downto 0);
-           ctrl1 : out  STD_LOGIC;
-           ctrl2 : out  STD_LOGIC;
            AccMEM : out  STD_LOGIC;
            memWE : out  STD_LOGIC;
            regWE : out  STD_LOGIC;
            DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+           ALUIN1 : out STD_LOGIC_VECTOR (15 downto 0);
+           ALUIN2 : out STD_LOGIC_VECTOR (15 downto 0);
            newT : out  STD_LOGIC;
            TE : out STD_LOGIC);
 end control;

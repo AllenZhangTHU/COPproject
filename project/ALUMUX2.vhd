@@ -34,7 +34,6 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity ALUMUX2 is
     Port ( B : in  STD_LOGIC_VECTOR (15 downto 0);
-           Imm : in  STD_LOGIC_VECTOR (15 downto 0);
            ALUOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            MEMOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            ALUctrl2 : in  STD_LOGIC_VECTOR (1 downto 0);
@@ -44,11 +43,10 @@ end ALUMUX2;
 architecture Behavioral of ALUMUX2 is
 
 begin
-	process(B, Imm, ALUOUT, MEMOUT, ALUctrl2)
+	process(B, ALUOUT, MEMOUT, ALUctrl2)
 	begin
 		case ALUctrl2 is
-			when "00" => ALUIN2 <= B;
-			when "01" => ALUIN2 <= Imm;
+			when "00" | "01" => ALUIN2 <= B;
 			when "10" => ALUIN2 <= ALUOUT;
 			when "11" => ALUIN2 <= MEMOUT;
 			when others => ALUIN2 <= "0000000000000000";
