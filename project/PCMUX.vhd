@@ -46,9 +46,9 @@ begin
 	process(NPC, A, adderOUT, PCctrl)
 	begin
 		case PCctrl is
-			when "00" | "01" => PCIN <= NPC;
-			when "10" => PCIN <= A;
-			when "11" => PCIN <= adderOUT;
+			when "00" => PCIN <= NPC;
+			when "10" | "11" => PCIN <= A;
+			when "01" => PCIN <= adderOUT;
 			when others => PCIN <= "0000000000000000";
 		end case;
 	end process;

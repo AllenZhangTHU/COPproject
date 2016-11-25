@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   21:22:50 11/25/2016
+-- Create Date:   22:53:20 11/25/2016
 -- Design Name:   
 -- Module Name:   Z:/Documents/COP/COPproject/project/maintester.vhd
 -- Project Name:  project
@@ -124,13 +124,7 @@ BEGIN
 		wait for CLK0_period/2;
    end process;
  
-   CLK1_process :process
-   begin
-		CLK1 <= '0';
-		wait for CLK1_period/2;
-		CLK1 <= '1';
-		wait for CLK1_period/2;
-   end process;
+   CLK1 <= '1';
  
 
    -- Stimulus process

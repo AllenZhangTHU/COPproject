@@ -86,13 +86,13 @@ begin
 			if ((ID_Rs = EXE_MEM_Rd or ID_Rt = EXE_MEM_Rd) and EXE_MEM_regWE = '1') then
 
 				if (ID_Rs = EXE_MEM_Rd) then
-					ALUctrl1 <= "10";
+					ALUctrl1 <= "11";
 				else
 					ALUctrl1 <= "00";
 				end if;
 
 				if (ID_Rt = EXE_MEM_Rd) then
-					ALUctrl2 <= "10";
+					ALUctrl2 <= "11";
 				else
 					ALUctrl2 <= "00";
 
