@@ -139,7 +139,7 @@ begin
 					when "00" => --SLL
 						OP <= "0110";
 						PCctrl <= "00";
-						RFctrl <= "010";
+						RFctrl <= "011";
 						Immctrl <= "0111";
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
@@ -155,7 +155,7 @@ begin
 					when "11" => --SRA
 						OP <= "1000";
 						PCctrl <= "00";
-						RFctrl <= "010";
+						RFctrl <= "011";
 						Immctrl <= "0111";
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
@@ -541,7 +541,7 @@ begin
 								newT <= '0';
 								TE <= '0';
 							when "010" => --MFPC
-								OP <= "0001";
+								OP <= "1010";
 								PCctrl <= "00";
 								RFctrl <= "000";
 								Immctrl <= "1000";
