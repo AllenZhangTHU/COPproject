@@ -41,7 +41,8 @@ entity RF is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
-           B : out  STD_LOGIC_VECTOR (15 downto 0));
+           B : out  STD_LOGIC_VECTOR (15 downto 0)
+			  );
 end RF;
 
 architecture Behavioral of RF is

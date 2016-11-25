@@ -79,6 +79,5 @@ begin
 			Ram2OE <= '1';
 		end if;
 	end process;
-
 end Behavioral;
 
