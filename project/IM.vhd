@@ -52,7 +52,7 @@ begin
 		variable state : std_logic := '0';
 		variable savedPC : std_logic_vector (15 downto 0) := "1111111111111111";
 	begin
-		if (clk'event and clk = '1') then
+		if (clk'event and clk = '0') then
 			if (state='0') then
 				if (PC /= savedPC) then
 					savedPC := PC;
