@@ -43,6 +43,7 @@ architecture Behavioral of ALU is
 
 begin
 	process(OP, ALUIN1, ALUIN2)
+	variable num : integer range 0 to 15;
 	begin
 		case OP is
 			when "0000" => ALUOUT <= ALUIN1 + ALUIN2;
@@ -53,7 +54,9 @@ begin
 			when "0101" => ALUOUT <= not ALUIN1;
 			when "0110" => ALUOUT <= to_stdlogicvector(to_bitvector(ALUIN1) sll conv_integer(ALUIN2));
 			when "0111" => ALUOUT <= to_stdlogicvector(to_bitvector(ALUIN1) srl conv_integer(ALUIN2));
-			when "1000" => ALUOUT <= to_stdlogicvector(to_bitvector(ALUIN1) sra conv_integer(ALUIN2));
+			when "1000" =>
+				num := conv_integer(ALUIN2);
+				ALUOUT <= SXT(ALUIN1(15 downto num), ALUOUT'length);
 			when "1001" => ALUOUT <= to_stdlogicvector(to_bitvector(ALUIN1) rol conv_integer(ALUIN2));
 			when "1010" => ALUOUT <= ALUIN1;
 			when "1011" => ALUOUT <= ALUIN2;

@@ -37,8 +37,8 @@ entity T is
 	 clk : in STD_LOGIC;
 	 rst : in STD_LOGIC;
 	 enable : in STD_LOGIC;
-	T_in : in  STD_LOGIC;
-	T_reg : out  STD_LOGIC);
+	 T_in : in  STD_LOGIC;
+	 T_reg : out  STD_LOGIC);
 end T;
 
 architecture Behavioral of T is

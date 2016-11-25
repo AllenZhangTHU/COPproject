@@ -45,3 +45,8 @@ project/isim
 *.nlf
 project/netgen
 *_pad.txt
+*.xwbt
+main.ut
+*.drc
+*.bit
+*.bgn

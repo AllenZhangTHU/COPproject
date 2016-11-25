@@ -33,8 +33,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISAdder.VComponents.all;
 
 entity Adder is
-    Port (
-	NPC : in  STD_LOGIC_VECTOR(15 downto 0);
+    Port (NPC : in  STD_LOGIC_VECTOR(15 downto 0);
         Imm : in  STD_LOGIC_VECTOR(15 downto 0);
         RPC : out  STD_LOGIC_VECTOR(15 downto 0));
 end Adder;
