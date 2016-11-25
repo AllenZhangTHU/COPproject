@@ -52,7 +52,7 @@ begin
 	process(clk, rst)
 	begin
 		if (rst = '0') then
-			MEM_regWE <= '0';
+			WB_regWE <= '0';
 		else
 			if (clk'event and clk = '1') then
         if (enable = '1') then 

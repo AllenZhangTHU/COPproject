@@ -15,9 +15,9 @@
 -- Revision: 
 -- Revision 0.01 - File Created
 -- Additional Comments: 
---
+--  
 ----------------------------------------------------------------------------------
-library IEEE;
+library IEEE; 
 use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
@@ -30,58 +30,58 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity main is
-    Port ( FLASH_A : out  STD_LOGIC_VECTOR (22 downto 0);
-           FLASH_D : inout  STD_LOGIC_VECTOR (15 downto 0);
-           FPGA_KEY : in  STD_LOGIC_VECTOR (3 downto 0);
+    Port ( --FLASH_A : out  STD_LOGIC_VECTOR (22 downto 0);
+           --FLASH_D : inout  STD_LOGIC_VECTOR (15 downto 0);
+           --FPGA_KEY : in  STD_LOGIC_VECTOR (3 downto 0);
            CLK0 : in  STD_LOGIC;
            CLK1 : in  STD_LOGIC;
-           LCD_CS1 : out  STD_LOGIC;
-           LCD_CS2 : out  STD_LOGIC;
-           LCD_DB : inout  STD_LOGIC_VECTOR (7 downto 0);
-           LCD_E : out  STD_LOGIC;
-           LCD_RESET : out  STD_LOGIC;
-           LCD_RS : out  STD_LOGIC;
-           LCD_RW : out  STD_LOGIC;
-           VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
-           VGA_HHYNC : out  STD_LOGIC;
-           VGA_VHYNC : out  STD_LOGIC;
-           PS2KB_CLOCK : out  STD_LOGIC;
-           PS2KB_DATA : in  STD_LOGIC;
+           --LCD_CS1 : out  STD_LOGIC;
+           --LCD_CS2 : out  STD_LOGIC;
+           --LCD_DB : inout  STD_LOGIC_VECTOR (7 downto 0);
+           --LCD_E : out  STD_LOGIC;
+           --LCD_RESET : out  STD_LOGIC;
+           --LCD_RS : out  STD_LOGIC;
+           --LCD_RW : out  STD_LOGIC;
+           --VGA_R : out  STD_LOGIC_VECTOR (2 downto 0);
+           --VGA_G : out  STD_LOGIC_VECTOR (2 downto 0);
+           --VGA_B : out  STD_LOGIC_VECTOR (2 downto 0);
+           --VGA_HHYNC : out  STD_LOGIC;
+           --VGA_VHYNC : out  STD_LOGIC;
+           --PS2KB_CLOCK : out  STD_LOGIC;
+           --PS2KB_DATA : in  STD_LOGIC;
            RAM1DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
-           SW_DIP : in  STD_LOGIC_VECTOR (15 downto 0);
-           FLASH_BYTE : out  STD_LOGIC;
-           FLASH_CE : out  STD_LOGIC;
-           FLASH_CE1 : out  STD_LOGIC;
-           FLASH_CE2 : out  STD_LOGIC;
-           FLASH_OE : out  STD_LOGIC;
-           FLASH_RP : out  STD_LOGIC;
-           FLASH_STS : out  STD_LOGIC;
-           FLASH_VPEN : out  STD_LOGIC;
-           FLASH_WE : out  STD_LOGIC;
-           U_RXD : out  STD_LOGIC;
-           U_TXD : out  STD_LOGIC;
+           --SW_DIP : in  STD_LOGIC_VECTOR (15 downto 0);
+           --FLASH_BYTE : out  STD_LOGIC;
+           --FLASH_CE : out  STD_LOGIC;
+           --FLASH_CE1 : out  STD_LOGIC;
+			  --FLASH_CE2 : out  STD_LOGIC;
+           --FLASH_OE : out  STD_LOGIC;
+           --FLASH_RP : out  STD_LOGIC;
+           --FLASH_STS : out  STD_LOGIC;
+           --FLASH_VPEN : out  STD_LOGIC;
+           --FLASH_WE : out  STD_LOGIC;
+           --U_RXD : out  STD_LOGIC;
+           --U_TXD : out  STD_LOGIC;
            RAM2DATA : inout  STD_LOGIC_VECTOR (15 downto 0);
            RAM1EN : out  STD_LOGIC;
            RAM1OE : out  STD_LOGIC;
-           RAM1RW : out  STD_LOGIC;
-           FPGA_LED : out  STD_LOGIC_VECTOR (15 downto 0);
+           RAM1WE : out  STD_LOGIC;
+           --FPGA_LED : out  STD_LOGIC_VECTOR (15 downto 0);
            RAM2EN : out  STD_LOGIC;
            RAM2OE : out  STD_LOGIC;
-           RAM2RW : out  STD_LOGIC;
+           RAM2WE : out  STD_LOGIC;
            RAM1ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
            RAM2ADDR : out  STD_LOGIC_VECTOR (17 downto 0);
-           DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
-           DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
-           CLK_FROM_KEY : in  STD_LOGIC;
+           --DYP0 : out  STD_LOGIC_VECTOR (6 downto 0);
+           --DYP1 : out  STD_LOGIC_VECTOR (6 downto 0);
+           --CLK_FROM_KEY : in  STD_LOGIC;
            RESET : in  STD_LOGIC;
            rdn: out  STD_LOGIC;
            wrn: out  STD_LOGIC;
            data_ready: in  STD_LOGIC;
            tbre: in  STD_LOGIC;
            tsre: in  STD_LOGIC
-);
+); 
 end main;
 
 architecture Behavioral of main is
@@ -114,6 +114,7 @@ component control is
            B : in  STD_LOGIC_VECTOR (15 downto 0);
            Imm : in  STD_LOGIC_VECTOR (15 downto 0);
            T : in  STD_LOGIC;
+        NPC : in STD_LOGIC_VECTOR (15 downto 0);
            OP : out  STD_LOGIC_VECTOR (3 downto 0);
            PCctrl : out  STD_LOGIC_VECTOR (1 downto 0);
            RFctrl : out  STD_LOGIC_VECTOR (2 downto 0);
@@ -205,10 +206,10 @@ component IF_ID is
            enable : in  STD_LOGIC;
 
            IF_Inst : in  STD_LOGIC_VECTOR (15 downto 0);
-           IF_NPC : STD_LOGIC_VECTOR(15 DOWNTO 0);
+           IF_NPC : in STD_LOGIC_VECTOR(15 DOWNTO 0);
 
            ID_Inst : out  STD_LOGIC_VECTOR (15 downto 0);
-           ID_NPC : STD_LOGIC_VECTOR(15 DOWNTO 0)
+           ID_NPC : out STD_LOGIC_VECTOR(15 DOWNTO 0)
            );
 end component;
 
@@ -217,7 +218,7 @@ component IM is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            Ram2OE : out  STD_LOGIC;
-           Ram2RW : out  STD_LOGIC;
+           Ram2WE : out  STD_LOGIC;
            Ram2EN : out  STD_LOGIC;
            Ram2Addr : out  STD_LOGIC_VECTOR (17 downto 0);
            Ram2Data : inout  STD_LOGIC_VECTOR (15 downto 0);
@@ -274,20 +275,25 @@ component PCReg is
            );
 end component;
 
-component RAM is
+component RAM_UART is
     Port (
   CLK : in  STD_LOGIC;
   ACCMEM : in  STD_LOGIC;
   MEM_WE : in  STD_LOGIC;
-  addr : inout  STD_LOGIC_VECTOR (15 downto 0);
-  data : inout  STD_LOGIC_VECTOR (15 downto 0);
+  addr : in  STD_LOGIC_VECTOR (15 downto 0);
+  data : in  STD_LOGIC_VECTOR (15 downto 0);
+  data_out : out STD_LOGIC_VECTOR (15 downto 0);
   Ram1Addr : out  STD_LOGIC_VECTOR (17 downto 0);
   Ram1Data : inout  STD_LOGIC_VECTOR (15 downto 0);
   Ram1OE : out  STD_LOGIC;
-  Ram1RW : out  STD_LOGIC;
+  Ram1WE : out  STD_LOGIC;
   Ram1EN : out  STD_LOGIC;
   wrn : out STD_LOGIC;
-  rdn : out STD_LOGIC); 
+  rdn : out STD_LOGIC;
+
+  data_ready : in  STD_LOGIC;
+  tbre : in  STD_LOGIC;
+  tsre : in  STD_LOGIC); 
 end component;
 
 component RF is
@@ -302,22 +308,29 @@ component RF is
            B : out  STD_LOGIC_VECTOR (15 downto 0));
 end component;
 
-component UART is
+component T is
     Port (
-  CLK : in  STD_LOGIC;
-  ACCMEM : in  STD_LOGIC;
-  MEM_WE : in  STD_LOGIC;
-  RAM1OE : out  STD_LOGIC;
-        RAM1RW : out  STD_LOGIC;
-        RAM1EN : out  STD_LOGIC;
-        data_ready : in  STD_LOGIC;
-        rdn : out  STD_LOGIC;
-        wrn : out  STD_LOGIC;
-        tbre : in  STD_LOGIC;
-        tsre : in  STD_LOGIC;
-  RAM1Data : inout  STD_LOGIC_VECTOR (15 downto 0));
+  clk : in STD_LOGIC;
+	 rst : in STD_LOGIC;
+	 enable : in STD_LOGIC;
+	T_in : in  STD_LOGIC;
+	T_reg : out  STD_LOGIC);
 end component;
-signal ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_MEM_enable,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,MEM_WB_enable,WB_regWE : STD_LOGIC;
+
+component Adder is
+    Port (
+  NPC : in  STD_LOGIC_VECTOR(15 downto 0);
+        Imm : in  STD_LOGIC_VECTOR(15 downto 0);
+        RPC : out  STD_LOGIC_VECTOR(15 downto 0));
+end component;
+
+component PC_Adder is
+    Port (
+  PC : in  STD_LOGIC_VECTOR(15 downto 0);
+  NPC : out  STD_LOGIC_VECTOR(15 downto 0));
+end component;
+
+signal ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
 signal ALUctrl1,ALUctrl2,PCctrl :STD_LOGIC_VECTOR(1 DOWNTO 0);
 signal RFctrl :STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal ID_OP,EXE_OP,Immctrl,ID_Rs,ID_Rt,ID_Rd,EXE_Rd,MEM_Rd,WB_Rd :STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -328,20 +341,22 @@ begin
   u1:ALU PORT MAP(EXE_OP,EXE_ALUIN1,EXE_ALUIN2,EXE_ALUOUT);
   u2:ALUMUX1 PORT MAP(ID_A0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl1,ID_A);
   u3:ALUMUX2 PORT MAP(ID_B0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl2,ID_B);
-  u4:control PORT MAP(ID_Inst,ID_A,ID_B,ID_Imm,ID_T,ID_OP,PCctrl,RFctrl,Immctrl,ID_Rs,ID_Rt,ID_Rd,ID_AccMEM,ID_memWE,ID_regWE,ID_DataIN,ID_ALUIN1,ID_ALUIN2,ID_newT,ID_TE);
-  u5:EXE_MEM PORT MAP(CLK0,RESET,EXE_MEM_enable,EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_memWE,EXE_regWE,EXE_DataIN,MEM_ALUOUT,MEM_Rd,MEM_AccMEM,MEM_memWE,MEM_regWE,MEM_DataIN);
+  u4:control PORT MAP(ID_Inst,ID_A,ID_B,ID_Imm,ID_T,ID_NPC,ID_OP,PCctrl,RFctrl,Immctrl,ID_Rs,ID_Rt,ID_Rd,ID_AccMEM,ID_memWE,ID_regWE,ID_DataIN,ID_ALUIN1,ID_ALUIN2,ID_newT,ID_TE);
+  u5:EXE_MEM PORT MAP(CLK0,RESET,'1',EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_memWE,EXE_regWE,EXE_DataIN,MEM_ALUOUT,MEM_Rd,MEM_AccMEM,MEM_memWE,MEM_regWE,MEM_DataIN);
   u6:Forwarding PORT MAP(ID_Rs ,ID_Rt ,EXE_Rd ,EXE_regWE ,EXE_AccMEM ,MEM_Rd ,MEM_regWE ,PCReg_enable ,IF_ID_enable ,ID_EXE_enable ,ID_EXE_bubble ,ALUctrl1 ,ALUctrl2);
   u7:ID_EXE PORT MAP(CLK0 ,RESET ,ID_EXE_enable ,ID_EXE_bubble ,ID_ALUIN1 ,ID_ALUIN2 ,ID_OP ,ID_Rd ,ID_AccMEM ,ID_memWE ,ID_regWE ,ID_DataIN ,EXE_ALUIN1 ,EXE_ALUIN2 ,EXE_OP ,EXE_Rd ,EXE_AccMEM ,EXE_memWE ,EXE_regWE ,EXE_DataIN);
   u8:IF_ID PORT MAP(CLK0 ,RESET ,IF_ID_enable ,IF_Inst ,IF_NPC ,ID_Inst ,ID_NPC);
-  u9:IM PORT MAP(PC ,CLK0 ,RESET ,RAM2OE ,RAM2RW ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst);
+  u9:IM PORT MAP(PC ,CLK0 ,RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst);
   u10:Imm PORT MAP(Immctrl,ID_Inst(10 downto 0),ID_Imm);
-  u11:MEM_WB PORT MAP(CLK0 ,RESET ,MEM_WB_enable ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
+  u11:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
   u12:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);
   u13:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
   u14:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC);
-  u15:RAM PORT MAP(CLK1 ,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1RW ,RAM1EN ,wrn ,rdn);
+  u15:RAM_UART PORT MAP(CLK1 ,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
   u16:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0);
-  u17:UART PORT MAP(CLK1 ,MEM_AccMEM ,MEM_memWE ,RAM1OE ,RAM1RW ,RAM1EN ,data_ready ,rdn ,wrn ,tbre ,tsre ,RAM1DATA);
+  u17:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
+  u18:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
+  u19:PC_Adder PORT MAP(PC,IF_NPC);
 
 end Behavioral;
 

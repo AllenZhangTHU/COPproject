@@ -38,7 +38,7 @@ entity RAM is
 	MEM_WE : in  STD_LOGIC;
 	addr : inout  STD_LOGIC_VECTOR (15 downto 0);
 	data : inout  STD_LOGIC_VECTOR (15 downto 0);
-	Ram1Addr : out  STD_LOGIC_VECTOR (15 downto 0);
+	Ram1Addr : out  STD_LOGIC_VECTOR (17 downto 0);
 	Ram1Data : inout  STD_LOGIC_VECTOR (15 downto 0);
 	Ram1OE : out  STD_LOGIC;
 	Ram1WE : out  STD_LOGIC;
@@ -53,7 +53,7 @@ architecture Behavioral of RAM is
 begin
 	wrn <= '1';
 	rdn <= '1';
-				
+	Ram1Addr(17 downto 16) <= "00";	
 	process(CLK)
 	begin
 		if (MEM_WE = '0') and (ACCMEM = '1') then
@@ -69,7 +69,7 @@ begin
 					Ram1WE <= '1';
 				when 2 =>
 					state1 <= 3;
-					RAM1Addr <= addr;
+					RAM1Addr(15 downto 0) <= addr;
 					RAM1Data <= data;
 					Ram1WE <= '1';
 				when 3 =>
@@ -97,7 +97,7 @@ begin
 					RAM1Data <= "ZZZZZZZZZZZZZZZZ";
 				when 2 =>
 					state2 <= 3;
-					RAM1Addr <= addr;
+					RAM1Addr(15 downto 0) <= addr;
 				when 3 =>
 					data <= Ram1Data;
 					state2 <= 0;

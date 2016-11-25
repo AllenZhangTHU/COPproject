@@ -43,18 +43,19 @@ entity UART is
         data_ready : in  STD_LOGIC;
         rdn : out  STD_LOGIC;
         wrn : out  STD_LOGIC;
-        tbre : inout  STD_LOGIC;
-        tsre : inout  STD_LOGIC;
-	RAM1Data : inout  STD_LOGIC_VECTOR (7 downto 0));
+        tbre : in  STD_LOGIC;
+        tsre : in  STD_LOGIC;
+	RAM1Data : inout  STD_LOGIC_VECTOR (15 downto 0));
 end UART;
 
 architecture Behavioral of UART is
 	signal state_in : integer range 0 to 3 := 0;
 	signal state_out : integer range 0 to 5 := 0;
 begin
-	process(In)
+	process(CLK)
 	begin
-		if (In'EVENT) and (In = '1') then
+		if (CLK'EVENT) and (CLK = '1') then
+			if (MEM_WE = '1') and (ACCMEM = '0') then
 			case state_in is
 				when 0 => 
 					state_in <= 1;
@@ -75,13 +76,10 @@ begin
 					state_in <= 0;
 				when others =>
 					null;
-			end case;
-		end if;
-	end process;
-
-	process(Out)
-	begin
-		if (Out'EVENT) and (Out = '1') then
+			end case;		
+			end if;
+		
+			if (MEM_WE = '0') and (ACCMEM = '1') then
 			case state_out is
 				when 0 => 
 					state_out <= 1;
@@ -89,7 +87,6 @@ begin
 					wrn <= '1';
 				when 1 => 
 					state_out <= 2;
-					RAM1Data <= temp;
 				when 2 => 
 					state_out <= 3;
 					wrn <= '0';
@@ -107,6 +104,7 @@ begin
 				when others =>
 					null;
 			end case;
+		end if;
 		end if;
 	end process;
 
