@@ -139,7 +139,7 @@ begin
 					when "00" => --SLL
 						OP <= "0110";
 						PCctrl <= "00";
-						RFctrl <= "001";
+						RFctrl <= "010";
 						Immctrl <= "0111";
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
@@ -155,7 +155,7 @@ begin
 					when "11" => --SRA
 						OP <= "1000";
 						PCctrl <= "00";
-						RFctrl <= "001";
+						RFctrl <= "010";
 						Immctrl <= "0111";
 						Rs <= "0" & Inst(7 downto 5);
 						Rt <= "1111";
