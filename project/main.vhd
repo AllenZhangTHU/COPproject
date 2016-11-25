@@ -33,7 +33,7 @@ entity main is
     Port ( --FLASH_A : out  STD_LOGIC_VECTOR (22 downto 0);
            --FLASH_D : inout  STD_LOGIC_VECTOR (15 downto 0);
            --FPGA_KEY : in  STD_LOGIC_VECTOR (3 downto 0);
-           CLK0 : in  STD_LOGIC;
+           CLK1 : in  STD_LOGIC;
            --CLK1 : in  STD_LOGIC;
            --LCD_CS1 : out  STD_LOGIC;
            --LCD_CS2 : out  STD_LOGIC;
@@ -277,23 +277,24 @@ end component;
 
 component RAM_UART is
     Port (
-  CLK : in  STD_LOGIC;
-  ACCMEM : in  STD_LOGIC;
-  MEM_WE : in  STD_LOGIC;
-  addr : in  STD_LOGIC_VECTOR (15 downto 0);
-  data : in  STD_LOGIC_VECTOR (15 downto 0);
-  data_out : out STD_LOGIC_VECTOR (15 downto 0);
-  Ram1Addr : out  STD_LOGIC_VECTOR (17 downto 0);
-  Ram1Data : inout  STD_LOGIC_VECTOR (15 downto 0);
-  Ram1OE : out  STD_LOGIC;
-  Ram1WE : out  STD_LOGIC;
-  Ram1EN : out  STD_LOGIC;
-  wrn : out STD_LOGIC;
-  rdn : out STD_LOGIC;
+			CLK : in  STD_LOGIC;
+			RST : in STD_LOGIC;
+			ACCMEM : in  STD_LOGIC;
+			MEM_WE : in  STD_LOGIC;
+			addr : in  STD_LOGIC_VECTOR (15 downto 0);
+			data : in  STD_LOGIC_VECTOR (15 downto 0);
+			data_out : out STD_LOGIC_VECTOR (15 downto 0);
+			Ram1Addr : out  STD_LOGIC_VECTOR (17 downto 0);
+			Ram1Data : inout  STD_LOGIC_VECTOR (15 downto 0);
+			Ram1OE : out  STD_LOGIC;
+			Ram1WE : out  STD_LOGIC;
+			Ram1EN : out  STD_LOGIC;
+			wrn : out STD_LOGIC;
+			rdn : out STD_LOGIC;
 
-  data_ready : in  STD_LOGIC;
-  tbre : in  STD_LOGIC;
-  tsre : in  STD_LOGIC); 
+			data_ready : in  STD_LOGIC;
+			tbre : in  STD_LOGIC;
+			tsre : in  STD_LOGIC);
 end component;
 
 component RF is
@@ -332,7 +333,7 @@ component PC_Adder is
   NPC : out  STD_LOGIC_VECTOR(15 downto 0));
 end component;
 
-signal CLK1,ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
+signal CLK0,ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
 signal ALUctrl1,ALUctrl2,PCctrl :STD_LOGIC_VECTOR(1 DOWNTO 0);
 signal RFctrl :STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal ID_OP,EXE_OP,Immctrl,ID_Rs,ID_Rt,ID_Rd,EXE_Rd,MEM_Rd,WB_Rd :STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -354,20 +355,20 @@ MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,W
 MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);
 PCMUX_module:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
 PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC);
-RAM_UART_module:RAM_UART PORT MAP(CLK1 ,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
+RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET, MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
 RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0, FPGA_LED);
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);
 
-process(CLK0)
+process(CLK1)
 	variable state : STD_LOGIC := '0';
 begin
-	if (CLK0'event and CLK0 = '1') then
+	if (CLK1'event and CLK1 = '1') then
 		if (state = '0') then
-			CLK1 <= '1';
+			CLK0 <= '1';
 		else
-			CLK1 <= '0';
+			CLK0 <= '0';
 		end if;
 		state := not state;
 	end if;
