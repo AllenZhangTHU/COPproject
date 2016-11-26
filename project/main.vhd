@@ -33,7 +33,7 @@ entity main is
     Port ( --FLASH_A : out  STD_LOGIC_VECTOR (22 downto 0);
            --FLASH_D : inout  STD_LOGIC_VECTOR (15 downto 0);
            --FPGA_KEY : in  STD_LOGIC_VECTOR (3 downto 0);
-           CLK1 : in  STD_LOGIC;
+           CLK2 : in  STD_LOGIC;
            --CLK1 : in  STD_LOGIC;
            --LCD_CS1 : out  STD_LOGIC;
            --LCD_CS2 : out  STD_LOGIC;
@@ -334,12 +334,12 @@ component PC_Adder is
   NPC : out  STD_LOGIC_VECTOR(15 downto 0));
 end component;
 
-signal CLK0,ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
+signal ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
 signal ALUctrl1,ALUctrl2,PCctrl :STD_LOGIC_VECTOR(1 DOWNTO 0);
 signal RFctrl :STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal ID_OP,EXE_OP,Immctrl,ID_Rs,ID_Rt,ID_Rd,EXE_Rd,MEM_Rd,WB_Rd :STD_LOGIC_VECTOR(3 DOWNTO 0);
 signal EXE_ALUOUT,EXE_ALUIN1,EXE_ALUIN2,ID_A0,ID_B0,MEM_MEMOUT,ID_A,ID_B,ID_Inst,ID_DataIN,ID_ALUIN1,ID_ALUIN2,EXE_DataIN,MEM_ALUOUT,MEM_DataIN,IF_Inst,IF_NPC,ID_NPC,ID_Imm,WB_MEMOUT,DataOUT,adderOUT,PCIN,PC    :STD_LOGIC_VECTOR(15 downto 0);
-
+signal state0, state1, CLK0, CLK1 : STD_LOGIC := '0';
 
 begin
 
@@ -362,17 +362,28 @@ RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);
---hhhhhh
+
 process(CLK1)
-	variable state : STD_LOGIC := '0';
 begin
 	if (CLK1'event and CLK1 = '1') then
-		if (state = '0') then
+		if (state0 = '0') then
 			CLK0 <= '1';
 		else
 			CLK0 <= '0';
 		end if;
-		state := not state;
+		state0 <= not state0;
+	end if;
+end process;
+
+process(CLK2)
+begin
+	if (CLK2'event and CLK2 = '1') then
+		if (state1 = '0') then
+			CLK1 <= '1';
+		else
+			CLK1 <= '0';
+		end if;
+		state1 <= not state1;
 	end if;
 end process;
 

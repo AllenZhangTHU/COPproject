@@ -46,11 +46,11 @@ end IM;
 
 architecture Behavioral of IM is
 	signal savedPC : std_logic_vector (15 downto 0) := "1111111111111111";
+	signal state : std_logic := '0';
 begin
 	Ram2WE <= '1';
 	Ram2Addr(17 downto 16) <= "00";
 	process(clk, rst)
-		variable state : std_logic := '0';
 	begin
 		if (clk'event and clk = '0') then
 			if (state='0') then
@@ -60,7 +60,7 @@ begin
 					Ram2EN <= '0';
 					Ram2Addr(15 downto 0) <= PC;
 					Ram2Data <= "ZZZZZZZZZZZZZZZZ";
-					state := '1';
+					state <= '1';
 				else
 					Ram2OE <= '1';
 					Ram2EN <= '1';
@@ -69,11 +69,11 @@ begin
 				end if;
 			else
 				Inst <= Ram2Data;
-				state := '0';
+				state <= '0';
 			end if;
 		end if;
 		if (rst = '0') then
-			state := '0';
+			state <= '0';
 			savedPC <= "1111111111111111";
 			Ram2EN <= '1';
 			Ram2OE <= '1';
