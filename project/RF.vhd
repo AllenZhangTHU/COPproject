@@ -41,8 +41,7 @@ entity RF is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
-           B : out  STD_LOGIC_VECTOR (15 downto 0);
-			  L : out STD_LOGIC_VECTOR (15 downto 0)
+           B : out  STD_LOGIC_VECTOR (15 downto 0)
 			  );
 end RF;
 
@@ -59,7 +58,6 @@ architecture Behavioral of RF is
 	signal SP : std_logic_vector (15 downto 0) := "0000000000000000";
 	signal RA : std_logic_vector (15 downto 0) := "0000000000000000";
 begin
-	L <= R0;
 	process(RFctrl, Inst, R0, R1, R2, R3, R4, R5, R6, R7, IH, SP, RA, regWE, MEMOUT, Rd)
 	begin
 		case RFctrl is
