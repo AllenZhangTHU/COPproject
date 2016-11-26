@@ -307,7 +307,8 @@ component RF is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
-           B : out  STD_LOGIC_VECTOR (15 downto 0)
+           B : out  STD_LOGIC_VECTOR (15 downto 0);
+			   L :out  STD_LOGIC_VECTOR (15 downto 0)
 			  );
 end component;
 
@@ -342,8 +343,6 @@ signal EXE_ALUOUT,EXE_ALUIN1,EXE_ALUIN2,ID_A0,ID_B0,MEM_MEMOUT,ID_A,ID_B,ID_Inst
 
 begin
 
-L(15 downto 8) <= IF_NPC(7 downto 0);
-L(7 downto 0) <= ID_NPC(7 downto 0);
 ALU_module:ALU PORT MAP(EXE_OP,EXE_ALUIN1,EXE_ALUIN2,EXE_ALUOUT);
 ALUMUX1_module:ALUMUX1 PORT MAP(ID_A0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl1,ID_A);
 ALUMUX2_module:ALUMUX2 PORT MAP(ID_B0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl2,ID_B);
@@ -359,7 +358,7 @@ MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);
 PCMUX_module:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
 PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC);
 RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
-RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0);
+RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0,L);
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);

@@ -29,10 +29,11 @@ end RAM_UART;
 architecture Behavioral of RAM_UART is
 	
 	signal Ram_Uart_ctrl : STD_LOGIC;
+	
+		signal state_uart : integer range 0 to 3;
 begin
 	process(CLK, RST, ACCMEM, MEM_WE, addr, data, data_ready, tbre, tsre)
 		variable state : integer range 0 to 1 := 0;
-		variable state_uart : integer range 0 to 3 := 0;
 	begin
 	
 		if (addr = "1011111100000000") or (addr = "1011111100000001") then
@@ -98,44 +99,26 @@ begin
 					Ram1EN <= '1';
 					Ram1OE <= '1';
 					Ram1WE <= '1';
-					state_uart := 1;
+					state_uart <= 1;
 				end if;
 				
 				if (state_uart = 1) then 
 					RAM1Data <= data;
-					state_uart := 2;
+					state_uart <= 2;
 				end if;
-				
 			end if;	
 			
 			if (state_uart = 2) then 
 				wrn <= '0';
-				state_uart := 3;
+				state_uart <= 3;
 			end if;
 			
 			if (state_uart = 3) then 
 				wrn <= '1';
-				state_uart := 0;
+				--if (tsre = '1') and (tbre = '1') then
+					state_uart <= 0;
+				--end if;
 			end if;
-				
---				case state_uart is
---						when 0 => 	wrn <= '1';
---										Ram1EN <= '1';
---										Ram1OE <= '1';
---										Ram1WE <= '1';
---										RAM1Data <= data;
---										state_uart := 1;
---						when 1 => 	wrn <= '0';
---										state_uart := 2;
---						when 2 =>	wrn <= '1';
---										if (tsre = '1') and (tbre = '1') then
---											
---										end if;
---										state_uart := 0;
---						when others => null;
---				end case;
-
-			
 			
 			if (addr = "1011111100000001") then
 				if (tsre = '0') or (tbre = '0') then
@@ -160,7 +143,7 @@ begin
 			Ram1WE <= '0';
 			Ram1EN <= '0';
 			state := 0;
-			state_uart := 0;
+			state_uart <= 0;
 			wrn <= '1';
 			rdn <= '1';
 		end if;
