@@ -363,7 +363,7 @@ RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);
-
+--hhhhhh
 process(CLK1)
 	variable state : STD_LOGIC := '0';
 begin
