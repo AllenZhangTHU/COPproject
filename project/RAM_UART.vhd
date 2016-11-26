@@ -32,6 +32,7 @@ architecture Behavioral of RAM_UART is
 begin
 	process(CLK, RST, ACCMEM, MEM_WE, addr, data, data_ready, tbre, tsre)
 		variable state : integer range 0 to 1 := 0;
+		variable state_uart : integer range 0 to 3 := 0;
 	begin
 	
 		if (addr = "1011111100000000") or (addr = "1011111100000001") then
@@ -75,10 +76,9 @@ begin
 				end case;
 			end if;
 			
-			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART write
+			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
 				case state is
 					when 0 => 	rdn <= '1';
-									wrn <= '1';
 									RAM1EN <= '1';
 									RAM1OE <= '1';
 									RAM1WE <= '1';
@@ -92,29 +92,75 @@ begin
 				end case;
 			end if;
 			
-			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART read
-				case state is
-						when 0 => 	wrn <= '1';
-										Ram1EN <= '1';
-										Ram1OE <= '1';
-										Ram1WE <= '1';
-										RAM1Data <= data;
-										state := 1;
-						when 1 => 	wrn <= '0';
-										
-										state := 0;
-						when others => null;
-				end case;
+			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART write
+				if (state_uart = 0) then 
+					wrn <= '1';
+					Ram1EN <= '1';
+					Ram1OE <= '1';
+					Ram1WE <= '1';
+					state_uart := 1;
+				end if;
+				
+				if (state_uart = 1) then 
+					RAM1Data <= data;
+					state_uart := 2;
+				end if;
+				
+			end if;	
+			
+			if (state_uart = 2) then 
+				wrn <= '0';
+				state_uart := 3;
 			end if;
 			
+			if (state_uart = 3) then 
+				wrn <= '1';
+				state_uart := 0;
+			end if;
+				
+--				case state_uart is
+--						when 0 => 	wrn <= '1';
+--										Ram1EN <= '1';
+--										Ram1OE <= '1';
+--										Ram1WE <= '1';
+--										RAM1Data <= data;
+--										state_uart := 1;
+--						when 1 => 	wrn <= '0';
+--										state_uart := 2;
+--						when 2 =>	wrn <= '1';
+--										if (tsre = '1') and (tbre = '1') then
+--											
+--										end if;
+--										state_uart := 0;
+--						when others => null;
+--				end case;
+
+			
+			
+			if (addr = "1011111100000001") then
+				if (tsre = '0') or (tbre = '0') then
+					data_out <= "1111111111111111";
+				else
+					data_out <= "0000000000000000";
+				end if;
+			else
+				data_out <= Ram1Data;
+			end if;
 			
 		end if;
+		
+--		if (MEM_WE = '1') and (ACCMEM = '0') and (state = 1) then
+--			wrn <= not CLK;
+--		else
+--			wrn <= '1';
+--		end if;
 		
 		if (RST = '0') then
 			Ram1OE <= '0';
 			Ram1WE <= '0';
 			Ram1EN <= '0';
 			state := 0;
+			state_uart := 0;
 			wrn <= '1';
 			rdn <= '1';
 		end if;
