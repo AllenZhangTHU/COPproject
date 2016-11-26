@@ -75,9 +75,10 @@ begin
 				end case;
 			end if;
 			
-			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART write
+			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART write
 				case state is
 					when 0 => 	rdn <= '1';
+									wrn <= '1';
 									RAM1EN <= '1';
 									RAM1OE <= '1';
 									RAM1WE <= '1';
@@ -91,23 +92,21 @@ begin
 				end case;
 			end if;
 			
-			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
+			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART read
 				case state is
-						when 0 => 	wrn <= '0';
+						when 0 => 	wrn <= '1';
 										Ram1EN <= '1';
 										Ram1OE <= '1';
 										Ram1WE <= '1';
 										RAM1Data <= data;
 										state := 1;
-						when 1 => 	if (tsre = '1') and (tbre = '1') then
-											wrn <= '1';
-										end if;
+						when 1 => 	wrn <= '0';
+										
 										state := 0;
 						when others => null;
 				end case;
 			end if;
 			
-			data_out <= Ram1Data;
 			
 		end if;
 		

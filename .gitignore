@@ -50,3 +50,4 @@ main.ut
 *.drc
 *.bit
 *.bgn
+*.ucf

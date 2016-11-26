@@ -12,7 +12,7 @@
 --
 -- Dependencies: 
 --
--- Revision: 
+-- Revision:  
 -- Revision 0.01 - File Created
 -- Additional Comments: 
 --  
@@ -66,7 +66,7 @@ entity main is
            RAM1EN : out  STD_LOGIC;
            RAM1OE : out  STD_LOGIC;
            RAM1WE : out  STD_LOGIC;
-           FPGA_LED : out  STD_LOGIC_VECTOR (15 downto 0);
+           L : out  STD_LOGIC_VECTOR (15 downto 0);
            RAM2EN : out  STD_LOGIC;
            RAM2OE : out  STD_LOGIC;
            RAM2WE : out  STD_LOGIC;
@@ -277,7 +277,7 @@ end component;
 
 component RAM_UART is
     Port (
-			CLK : in  STD_LOGIC;
+ CLK : in  STD_LOGIC;
 			RST : in STD_LOGIC;
 			ACCMEM : in  STD_LOGIC;
 			MEM_WE : in  STD_LOGIC;
@@ -294,7 +294,7 @@ component RAM_UART is
 
 			data_ready : in  STD_LOGIC;
 			tbre : in  STD_LOGIC;
-			tsre : in  STD_LOGIC);
+			tsre : in  STD_LOGIC); 
 end component;
 
 component RF is
@@ -355,8 +355,8 @@ MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,W
 MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);
 PCMUX_module:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
 PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC);
-RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET, MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
-RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0, FPGA_LED);
+RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
+RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0, L);
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);

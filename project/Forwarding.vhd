@@ -12,7 +12,7 @@
 --
 -- Dependencies: 
 --
--- Revision: 
+-- Revision:  
 -- Revision 0.01 - File Created
 -- Additional Comments: 
 --
@@ -66,41 +66,23 @@ begin
 			ID_EXE_bubble <= '0';
 		end if;
 
-		if ((ID_Rs = ID_EXE_Rd or ID_Rt = ID_EXE_Rd)  and ID_EXE_regWE = '1') then
-
-			if (ID_Rs = ID_EXE_Rd) then
-				ALUctrl1 <= "10";
-			else
-				ALUctrl1 <= "00";
-
-			end if;
-
-			if (ID_Rt = ID_EXE_Rd) then
-				ALUctrl2 <= "10";
-			else
-				ALUctrl2 <= "00";
-
-			end if;
-
+		if ((ID_Rs = ID_EXE_Rd)  and ID_EXE_regWE = '1') then
+			ALUctrl1 <= "10";
 		else
-			if ((ID_Rs = EXE_MEM_Rd or ID_Rt = EXE_MEM_Rd) and EXE_MEM_regWE = '1') then
-
-				if (ID_Rs = EXE_MEM_Rd) then
-					ALUctrl1 <= "11";
-				else
-					ALUctrl1 <= "00";
-				end if;
-
-				if (ID_Rt = EXE_MEM_Rd) then
-					ALUctrl2 <= "11";
-				else
-					ALUctrl2 <= "00";
-
-				end if;
-				
+			if ((ID_Rs = EXE_MEM_Rd) and EXE_MEM_regWE = '1') then
+				ALUctrl1 <= "11";
 			else
-				ALUctrl1 <= "00";
-				ALUctrl2 <= "00";
+				ALUCtrl1 <= "00";
+			end if;
+		end if;
+		
+		if ((ID_Rt = ID_EXE_Rd)  and ID_EXE_regWE = '1') then
+			ALUctrl2 <= "10";
+		else
+			if ((ID_Rt = EXE_MEM_Rd) and EXE_MEM_regWE = '1') then
+				ALUctrl2 <= "11";
+			else
+				ALUCtrl2 <= "00";
 			end if;
 		end if;
 	end process;
