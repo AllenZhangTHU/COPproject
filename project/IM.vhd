@@ -69,6 +69,7 @@ begin
 				end if;
 			else
 				Inst <= Ram2Data;
+				state := '0';
 			end if;
 		end if;
 		if (rst = '0') then
