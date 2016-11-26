@@ -216,7 +216,7 @@ end component;
 component IM is
     Port ( PC : in  STD_LOGIC_VECTOR (15 downto 0);
            clk : in  STD_LOGIC;
-			  stateclk : in STD_LOGIC;
+			  --stateclk : in STD_LOGIC;
            rst : in  STD_LOGIC;
            Ram2OE : out  STD_LOGIC;
            Ram2WE : out  STD_LOGIC;
@@ -352,7 +352,7 @@ EXE_MEM_module:EXE_MEM PORT MAP(CLK0,RESET,'1',EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_
 Forwarding_module:Forwarding PORT MAP(ID_Rs ,ID_Rt ,EXE_Rd ,EXE_regWE ,EXE_AccMEM ,MEM_Rd ,MEM_regWE ,PCReg_enable ,IF_ID_enable ,ID_EXE_enable ,ID_EXE_bubble ,ALUctrl1 ,ALUctrl2);
 ID_EXE_module:ID_EXE PORT MAP(CLK0 ,RESET ,ID_EXE_enable ,ID_EXE_bubble ,ID_ALUIN1 ,ID_ALUIN2 ,ID_OP ,ID_Rd ,ID_AccMEM ,ID_memWE ,ID_regWE ,ID_DataIN ,EXE_ALUIN1 ,EXE_ALUIN2 ,EXE_OP ,EXE_Rd ,EXE_AccMEM ,EXE_memWE ,EXE_regWE ,EXE_DataIN);
 IF_ID_module:IF_ID PORT MAP(CLK0 ,RESET ,IF_ID_enable ,IF_Inst ,IF_NPC ,ID_Inst ,ID_NPC);
-IM_module:IM PORT MAP(PC ,CLK1 ,CLK0, RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst);
+IM_module:IM PORT MAP(PC ,CLK1 , RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst);
 Imm_module:Imm PORT MAP(Immctrl,ID_Inst(10 downto 0),ID_Imm);
 MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
 MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);

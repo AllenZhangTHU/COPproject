@@ -35,7 +35,6 @@ use IEEE.NUMERIC_STD.ALL;
 entity IM is
     Port ( PC : in  STD_LOGIC_VECTOR (15 downto 0);
            clk : in  STD_LOGIC;
-			  stateclk : in STD_LOGIC;
            rst : in  STD_LOGIC;
            Ram2OE : out  STD_LOGIC;
            Ram2WE : out  STD_LOGIC;
@@ -46,15 +45,17 @@ entity IM is
 end IM;
 
 architecture Behavioral of IM is
+	signal savedPC : std_logic_vector (15 downto 0) := "1111111111111111";
 begin
 	Ram2WE <= '1';
 	Ram2Addr(17 downto 16) <= "00";
 	process(clk, rst)
-		variable state : STD_LOGIC := '0';
+		variable state : std_logic := '0';
 	begin
 		if (clk'event and clk = '0') then
-			if (state = '0') then
-				if (stateclk = '1') then
+			if (state='0') then
+				if (PC /= savedPC) then
+					savedPC <= PC;
 					Ram2OE <= '0';
 					Ram2EN <= '0';
 					Ram2Addr(15 downto 0) <= PC;
@@ -63,9 +64,8 @@ begin
 				else
 					Ram2OE <= '1';
 					Ram2EN <= '1';
-					Ram2Addr(15 downto 0) <= "0000000000000000";
+					Ram2Addr(15 downto 0) <= PC;
 					Ram2Data <= "ZZZZZZZZZZZZZZZZ";
-					state := '0';
 				end if;
 			else
 				Inst <= Ram2Data;
@@ -73,9 +73,10 @@ begin
 			end if;
 		end if;
 		if (rst = '0') then
+			state := '0';
+			savedPC <= "1111111111111111";
 			Ram2EN <= '1';
 			Ram2OE <= '1';
-			state := '0';
 		end if;
 	end process;
 end Behavioral;

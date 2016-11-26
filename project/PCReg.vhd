@@ -47,7 +47,7 @@ begin
 	process(clk, rst)
 	begin
 		if (rst = '0') then
-			PC <= "0000000000000000";
+			PC <= "1111111111111111";
 		else
 			if (clk'event and clk = '1') then
 				if (enable = '1') then
