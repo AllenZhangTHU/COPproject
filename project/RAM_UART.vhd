@@ -71,7 +71,7 @@ begin
 									RAM1Addr(17 downto 16) <= "00";
 									RAM1Addr(15 downto 0) <= addr;
 									state <= 1;
-					when 1 => 	data_out <= Ram1Data;
+					when 1 => 	
 									state <= 0;
 					when others => null;
 				end case;
@@ -117,26 +117,9 @@ begin
 					state_uart <= 0;
 				end if;
 			end if;
-			
-			if (addr = "1011111100000001") then
-				data_out(15 downto 2) <= "00000000000000";
-				
-				if (tsre = '0') or (tbre = '0') then
-					data_out(1) <= '0';
-				else
-					data_out(1) <= '1';
-				end if;
-				
-				if (data_ready = '0') then
-					data_out(0) <= '0';
-				else
-					data_out(0) <= '1';
-				end if;
-			else
-				data_out <= Ram1Data;
-			end if;
-			
-		end if;
+		end if;	
+		
+		
 		
 --		if (MEM_WE = '1') and (ACCMEM = '0') and (state = 1) then
 --			wrn <= not CLK;
@@ -153,5 +136,24 @@ begin
 		end if;
 		
 	end process;
-
+	process(Ram1Data,addr,tsre,tbre,data_ready)
+		begin
+			if (addr = "1011111100000001") then
+				data_out(15 downto 2) <= "00000000000000";
+				
+				if (tsre = '0') or (tbre = '0') then
+					data_out(0) <= '0';
+				else
+					data_out(0) <= '1';
+				end if;
+				
+				if (data_ready = '0') then
+					data_out(1) <= '0';
+				else
+					data_out(1) <= '1';
+				end if;
+			else
+				data_out <= Ram1Data;
+			end if;
+		end process;
 end Behavioral;
