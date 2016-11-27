@@ -398,18 +398,18 @@ begin
 	end if;
 end process;
 
-process(CLK2)
-begin
-	if (CLK2'event and CLK2 = '1') then
-		if (state1 = '0') then
-			CLK1 <= '1';
-		else
-			CLK1 <= '0';
-		end if;
-		state1 <= not state1;
-	end if;
-end process;
-
+--process(CLK2)
+--begin
+--	if (CLK2'event and CLK2 = '1') then
+--		if (state1 = '0') then
+--			CLK1 <= '1';
+--		else
+--			CLK1 <= '0';
+--		end if;
+--		state1 <= not state1;
+--	end if;
+--end process;
+CLK1 <= CLK2;
 end Behavioral;
 
  
