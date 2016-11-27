@@ -150,7 +150,7 @@ component EXE_MEM is
            MEM_memWE : out  STD_LOGIC;
            MEM_regWE : out  STD_LOGIC;
            MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
-			  MEM_RAM2: buffer  STD_LOGIC
+			  MEM_RAM2: in  STD_LOGIC
            );
 end component;
 
@@ -229,7 +229,6 @@ component IM is
            Inst : out STD_LOGIC_VECTOR (15 downto 0);
 			  MEM_RAM2: in  STD_LOGIC;
 			  MEM_ACCMEM: in  STD_LOGIC;
-			  MEM_MEMWE: in  STD_LOGIC;
 			  MEM_ALUOUT:in  STD_LOGIC_VECTOR (15 downto 0);
 			  MEM_DATAIN: in  STD_LOGIC_VECTOR (15 downto 0)
 			  );
@@ -366,7 +365,7 @@ EXE_MEM_module:EXE_MEM PORT MAP(CLK0,RESET,'1',EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_
 Forwarding_module:Forwarding PORT MAP(ID_Rs ,ID_Rt ,EXE_Rd ,EXE_regWE ,EXE_AccMEM ,MEM_Rd ,MEM_regWE ,PCReg_enable ,IF_ID_enable ,ID_EXE_enable ,ID_EXE_bubble ,ALUctrl1 ,ALUctrl2);
 ID_EXE_module:ID_EXE PORT MAP(CLK0 ,RESET ,ID_EXE_enable ,ID_EXE_bubble ,ID_ALUIN1 ,ID_ALUIN2 ,ID_OP ,ID_Rd ,ID_AccMEM ,ID_memWE ,ID_regWE ,ID_DataIN ,EXE_ALUIN1 ,EXE_ALUIN2 ,EXE_OP ,EXE_Rd ,EXE_AccMEM ,EXE_memWE ,EXE_regWE ,EXE_DataIN,MEM_RAM2);
 IF_ID_module:IF_ID PORT MAP(CLK0 ,RESET ,IF_ID_enable ,IF_Inst ,IF_NPC ,ID_Inst ,ID_NPC,MEM_RAM2);
-IM_module:IM PORT MAP(PC ,CLK1 , RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst,MEM_RAM2,MEM_AccMEM,MEM_memWE,MEM_ALUOUT,MEM_DataIN);
+IM_module:IM PORT MAP(PC ,CLK1 , RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst,MEM_RAM2,MEM_AccMEM,MEM_ALUOUT,MEM_DataIN);
 Imm_module:Imm PORT MAP(Immctrl,ID_Inst(10 downto 0),ID_Imm);
 MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
 MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT,ID_Inst,MEM_RAM2);
@@ -378,6 +377,15 @@ T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);
 
+process(MEM_ALUOUT,MEM_ACCMEM,MEM_MEMWE)
+	begin
+		if (MEM_ALUOUT < "1000000000000000")and((MEM_ACCMEM = '1')or(MEM_MEMWE = '1')) then
+				MEM_RAM2 <= '1';
+			 else
+				MEM_RAM2 <= '0';
+			end if;
+	end process;
+	
 process(CLK1)
 begin
 	if (CLK1'event and CLK1 = '1') then

@@ -44,7 +44,6 @@ entity IM is
            Inst : out STD_LOGIC_VECTOR (15 downto 0);
 			  MEM_RAM2: in  STD_LOGIC;
 			  MEM_ACCMEM: in  STD_LOGIC;
-			  MEM_MEMWE: in  STD_LOGIC;
 			  MEM_ALUOUT:in  STD_LOGIC_VECTOR (15 downto 0);
 			  MEM_DATAIN: in  STD_LOGIC_VECTOR (15 downto 0));
 end IM;
@@ -71,6 +70,7 @@ begin
 					else
 						Ram2OE <= '1';
 						Ram2EN <= '1';
+						Ram2WE <= '1';
 						Ram2Addr(15 downto 0) <= PC;
 						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
 					end if;
