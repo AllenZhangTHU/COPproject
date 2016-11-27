@@ -41,7 +41,8 @@ entity IF_ID is
 			 IF_NPC  :in STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 			 ID_Inst : out  STD_LOGIC_VECTOR (15 downto 0);
-			 ID_NPC  :out STD_LOGIC_VECTOR(15 DOWNTO 0)
+			 ID_NPC  :out STD_LOGIC_VECTOR(15 DOWNTO 0);
+			 MEM_RAM2 : in STD_LOGIC
 			 );
 end IF_ID;
 
@@ -54,7 +55,7 @@ begin
 		ID_NPC <= "0000000000000000";
 	else
 		if (clk'event and clk = '1') then
-			if (enable = '1')then
+			if (enable = '1')and(MEM_RAM2 = '0')then
 				ID_Inst <= IF_Inst;
 				ID_NPC <= IF_NPC;
 			end if;

@@ -36,17 +36,24 @@ entity MEMMUX is
     Port ( ALUOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            DataOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            ACCMEM : in  STD_LOGIC;
-           MEMOUT : out  STD_LOGIC_VECTOR (15 downto 0));
+           MEMOUT : out  STD_LOGIC_VECTOR (15 downto 0);
+			  IMOUT: in  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2:in STD_LOGIC);
 end MEMMUX;
 
 architecture Behavioral of MEMMUX is
 
 begin
-	process (ALUOUT, DataOUT, ACCMEM)
+	process (ALUOUT, DataOUT, ACCMEM,MEM_RAM2,IMOUT)
 	begin
 		case ACCMEM is
 			when '0' => MEMOUT <= ALUOUT;
-			when '1' => MEMOUT <= DataOUT;
+			when '1' => 
+				if (MEM_RAM2 = '1')then
+					MEMOUT <= IMOUT;
+				else
+					MEMOUT <= DataOUT;
+				end if;
 			when others => MEMOUT <= "0000000000000000";
 		end case;
 	end process;

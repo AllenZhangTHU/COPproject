@@ -23,7 +23,8 @@ entity RAM_UART is
 
 			data_ready : in  STD_LOGIC;
 			tbre : in  STD_LOGIC;
-			tsre : in  STD_LOGIC);
+			tsre : in  STD_LOGIC;
+			MEM_RAM2 :in  STD_LOGIC );
 end RAM_UART;
 
 architecture Behavioral of RAM_UART is
@@ -43,7 +44,7 @@ begin
 		end if;
 		
 		if (CLK'EVENT) and (CLK = '0') then
-			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '1') then --RAM write
+			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '1')and(MEM_RAM2 = '0') then --RAM write
 				case state is
 					when 0 => 	wrn <= '1';
 									rdn <= '1';
@@ -60,7 +61,7 @@ begin
 				end case;
 			end if;
 			
-			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '1') then --RAM read
+			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '1')and(MEM_RAM2 = '0') then --RAM read
 				case state is
 					when 0 => 	wrn <= '1';
 									rdn <= '1';

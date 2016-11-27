@@ -149,7 +149,8 @@ component EXE_MEM is
            MEM_AccMEM : out  STD_LOGIC;
            MEM_memWE : out  STD_LOGIC;
            MEM_regWE : out  STD_LOGIC;
-           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0)
+           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2: buffer  STD_LOGIC
            );
 end component;
 
@@ -196,7 +197,8 @@ component ID_EXE is
            EXE_AccMEM : out  STD_LOGIC;
            EXE_memWE : out  STD_LOGIC;
            EXE_regWE : out  STD_LOGIC;
-           EXE_DataIN : out  STD_LOGIC_VECTOR (15 downto 0)
+           EXE_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2 : in STD_LOGIC
            );
 end component;
 
@@ -209,7 +211,8 @@ component IF_ID is
            IF_NPC : in STD_LOGIC_VECTOR(15 DOWNTO 0);
 
            ID_Inst : out  STD_LOGIC_VECTOR (15 downto 0);
-           ID_NPC : out STD_LOGIC_VECTOR(15 DOWNTO 0)
+           ID_NPC : out STD_LOGIC_VECTOR(15 DOWNTO 0);
+			  MEM_RAM2 : in STD_LOGIC
            );
 end component;
 
@@ -223,7 +226,13 @@ component IM is
            Ram2EN : out  STD_LOGIC;
            Ram2Addr : out  STD_LOGIC_VECTOR (17 downto 0);
            Ram2Data : inout  STD_LOGIC_VECTOR (15 downto 0);
-           Inst : out STD_LOGIC_VECTOR (15 downto 0));
+           Inst : out STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2: in  STD_LOGIC;
+			  MEM_ACCMEM: in  STD_LOGIC;
+			  MEM_MEMWE: in  STD_LOGIC;
+			  MEM_ALUOUT:in  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_DATAIN: in  STD_LOGIC_VECTOR (15 downto 0)
+			  );
 end component;
 
 
@@ -253,7 +262,10 @@ component MEMMUX is
     Port ( ALUOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            DataOUT : in  STD_LOGIC_VECTOR (15 downto 0);
            ACCMEM : in  STD_LOGIC;
-           MEMOUT : out  STD_LOGIC_VECTOR (15 downto 0));
+           MEMOUT : out  STD_LOGIC_VECTOR (15 downto 0);
+			  
+			  IMOUT: in  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2:in STD_LOGIC);
 end component;
 
 component PCMUX is
@@ -271,7 +283,9 @@ component PCReg is
 
            NPC : in  STD_LOGIC_VECTOR (15 downto 0);
 
-           PC : out  STD_LOGIC_VECTOR (15 downto 0)
+           PC : out  STD_LOGIC_VECTOR (15 downto 0);
+			  
+					 MEM_RAM2: in STD_LOGIC
            
            );
 end component;
@@ -295,7 +309,8 @@ component RAM_UART is
 
 			data_ready : in  STD_LOGIC;
 			tbre : in  STD_LOGIC;
-			tsre : in  STD_LOGIC); 
+			tsre : in  STD_LOGIC;
+			MEM_RAM2: in STD_LOGIC); 
 end component;
 
 component RF is
@@ -334,7 +349,7 @@ component PC_Adder is
   NPC : out  STD_LOGIC_VECTOR(15 downto 0));
 end component;
 
-signal ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
+signal MEM_RAM2,ID_T,ID_AccMEM,ID_memWE,ID_regWE,ID_newT,ID_TE,EXE_AccMEM,EXE_memWE,EXE_regWE,MEM_AccMEM,MEM_memWE,MEM_regWE,PCReg_enable,IF_ID_enable,ID_EXE_enable,ID_EXE_bubble,WB_regWE : STD_LOGIC;
 signal ALUctrl1,ALUctrl2,PCctrl :STD_LOGIC_VECTOR(1 DOWNTO 0);
 signal RFctrl :STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal ID_OP,EXE_OP,Immctrl,ID_Rs,ID_Rt,ID_Rd,EXE_Rd,MEM_Rd,WB_Rd :STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -347,17 +362,17 @@ ALU_module:ALU PORT MAP(EXE_OP,EXE_ALUIN1,EXE_ALUIN2,EXE_ALUOUT);
 ALUMUX1_module:ALUMUX1 PORT MAP(ID_A0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl1,ID_A);
 ALUMUX2_module:ALUMUX2 PORT MAP(ID_B0,EXE_ALUOUT,MEM_MEMOUT,ALUctrl2,ID_B);
 control_module:control PORT MAP(ID_Inst,ID_A,ID_B,ID_Imm,ID_T,ID_NPC,ID_OP,PCctrl,RFctrl,Immctrl,ID_Rs,ID_Rt,ID_Rd,ID_AccMEM,ID_memWE,ID_regWE,ID_DataIN,ID_ALUIN1,ID_ALUIN2,ID_newT,ID_TE);
-EXE_MEM_module:EXE_MEM PORT MAP(CLK0,RESET,'1',EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_memWE,EXE_regWE,EXE_DataIN,MEM_ALUOUT,MEM_Rd,MEM_AccMEM,MEM_memWE,MEM_regWE,MEM_DataIN);
+EXE_MEM_module:EXE_MEM PORT MAP(CLK0,RESET,'1',EXE_ALUOUT,EXE_Rd,EXE_AccMEM,EXE_memWE,EXE_regWE,EXE_DataIN,MEM_ALUOUT,MEM_Rd,MEM_AccMEM,MEM_memWE,MEM_regWE,MEM_DataIN,MEM_RAM2);
 Forwarding_module:Forwarding PORT MAP(ID_Rs ,ID_Rt ,EXE_Rd ,EXE_regWE ,EXE_AccMEM ,MEM_Rd ,MEM_regWE ,PCReg_enable ,IF_ID_enable ,ID_EXE_enable ,ID_EXE_bubble ,ALUctrl1 ,ALUctrl2);
-ID_EXE_module:ID_EXE PORT MAP(CLK0 ,RESET ,ID_EXE_enable ,ID_EXE_bubble ,ID_ALUIN1 ,ID_ALUIN2 ,ID_OP ,ID_Rd ,ID_AccMEM ,ID_memWE ,ID_regWE ,ID_DataIN ,EXE_ALUIN1 ,EXE_ALUIN2 ,EXE_OP ,EXE_Rd ,EXE_AccMEM ,EXE_memWE ,EXE_regWE ,EXE_DataIN);
-IF_ID_module:IF_ID PORT MAP(CLK0 ,RESET ,IF_ID_enable ,IF_Inst ,IF_NPC ,ID_Inst ,ID_NPC);
-IM_module:IM PORT MAP(PC ,CLK1 , RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst);
+ID_EXE_module:ID_EXE PORT MAP(CLK0 ,RESET ,ID_EXE_enable ,ID_EXE_bubble ,ID_ALUIN1 ,ID_ALUIN2 ,ID_OP ,ID_Rd ,ID_AccMEM ,ID_memWE ,ID_regWE ,ID_DataIN ,EXE_ALUIN1 ,EXE_ALUIN2 ,EXE_OP ,EXE_Rd ,EXE_AccMEM ,EXE_memWE ,EXE_regWE ,EXE_DataIN,MEM_RAM2);
+IF_ID_module:IF_ID PORT MAP(CLK0 ,RESET ,IF_ID_enable ,IF_Inst ,IF_NPC ,ID_Inst ,ID_NPC,MEM_RAM2);
+IM_module:IM PORT MAP(PC ,CLK1 , RESET ,RAM2OE ,RAM2WE ,RAM2EN ,RAM2ADDR ,RAM2DATA ,IF_Inst,MEM_RAM2,MEM_AccMEM,MEM_memWE,MEM_ALUOUT,MEM_DataIN);
 Imm_module:Imm PORT MAP(Immctrl,ID_Inst(10 downto 0),ID_Imm);
 MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
-MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT);
+MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT,ID_Inst,MEM_RAM2);
 PCMUX_module:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
-PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC);
-RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre);
+PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC,MEM_RAM2);
+RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre,MEM_RAM2);
 RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0,L);
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
@@ -375,17 +390,9 @@ begin
 	end if;
 end process;
 
-process(CLK2)
-begin
-	if (CLK2'event and CLK2 = '1') then
-		if (state1 = '0') then
-			CLK1 <= '1';
-		else
-			CLK1 <= '0';
-		end if;
-		state1 <= not state1;
-	end if;
-end process;
+
+	CLK1 <= CLK2;
+
 
 end Behavioral;
 

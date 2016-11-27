@@ -49,7 +49,8 @@ entity EXE_MEM is
            MEM_AccMEM : out  STD_LOGIC;
            MEM_memWE : out  STD_LOGIC;
            MEM_regWE : out  STD_LOGIC;
-           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0)
+           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2: buffer  STD_LOGIC
            );
 end EXE_MEM;
 
@@ -61,18 +62,31 @@ begin
       MEM_AccMEM <= '0';
       MEM_memWE <= '0';
       MEM_regWE <= '0';
+		MEM_RAM2 <= '0';
     else
       if (clk'event and clk = '1') then
-        if (enable = '1') then
+        if (enable = '1')and(MEM_RAM2 = '0') then
           MEM_ALUOUT <= EXE_ALUOUT;
           MEM_Rd <= EXE_Rd;
           MEM_AccMEM <= EXE_AccMEM;
           MEM_memWE <= EXE_memWE;
           MEM_regWE <= EXE_regWE;
           MEM_DataIN <= EXE_DataIN;
+			 if (EXE_ALUOUT < "1000000000000000")and((EXE_ACCMEM = '1')or(EXE_MEMWE = '1')) then
+				MEM_RAM2 <= '1';
+			 else
+				MEM_RAM2 <= '0';
+			 end if;
+			else 
+				if (MEM_RAM2 = '1') then
+					MEM_AccMEM <= '0';
+					MEM_memWE <= '0';
+					MEM_regWE <= '0';
+					MEM_RAM2 <= '0';
+				end if;
         end if;
       end if;
-    end if;
+		end if;
   end process;
 
 end Behavioral;

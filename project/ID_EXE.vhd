@@ -54,7 +54,8 @@ entity ID_EXE is
            EXE_AccMEM : out  STD_LOGIC;
            EXE_memWE : out  STD_LOGIC;
            EXE_regWE : out  STD_LOGIC;
-           EXE_DataIN : out  STD_LOGIC_VECTOR (15 downto 0)
+           EXE_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_RAM2 : in STD_LOGIC
            );
 end ID_EXE;
 
@@ -68,7 +69,7 @@ begin
 			EXE_regWE <= '0';
 		else
 			if (clk'event and clk = '1') then
-				if (enable = '1') then 
+				if (enable = '1')and(MEM_RAM2 = '0') then 
 					EXE_ALUIN1 <= ID_ALUIN1;
 					EXE_ALUIN2 <= ID_ALUIN2;
 					EXE_OP <= ID_OP;
@@ -78,7 +79,7 @@ begin
 					EXE_regWE <= ID_regWE;
 					EXE_DataIN <= ID_DataIN;
 				else
-					if (bubble = '1') then
+					if (bubble = '1')and(MEM_RAM2 = '0') then
 						EXE_AccMEM <= '0';
 						EXE_memWE <= '0';
 						EXE_regWE <= '0';
