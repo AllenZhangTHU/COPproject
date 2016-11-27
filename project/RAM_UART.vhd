@@ -29,10 +29,11 @@ end RAM_UART;
 architecture Behavioral of RAM_UART is
 	
 	signal Ram_Uart_ctrl : STD_LOGIC;
+	signal state_uart : integer range 0 to 2;
+	signal state : integer range 0 to 1 := 0;
 begin
 	process(CLK, RST, ACCMEM, MEM_WE, addr, data, data_ready, tbre, tsre)
-		variable state : integer range 0 to 1 := 0;
-		variable state_uart : integer range 0 to 3 := 0;
+		
 	begin
 	
 		if (addr = "1011111100000000") or (addr = "1011111100000001") then
@@ -52,9 +53,9 @@ begin
 									RAM1Addr(17 downto 16) <= "00";
 									RAM1Addr(15 downto 0) <= addr;
 									RAM1Data <= data;
-									state := 1;
+									state <= 1;
 					when 1 => 	Ram1WE <= '0';
-									state := 0;
+									state <= 0;
 					when others => null;
 				end case;
 			end if;
@@ -69,27 +70,29 @@ begin
 									RAM1Data <= (others => 'Z');
 									RAM1Addr(17 downto 16) <= "00";
 									RAM1Addr(15 downto 0) <= addr;
-									state := 1;
-					when 1 => 	data_out <= Ram1Data;
-									state := 0;
+									state <= 1;
+					when 1 => 	
+									state <= 0;
 					when others => null;
 				end case;
 			end if;
 			
 			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
-				case state is
-					when 0 => 	rdn <= '1';
-									RAM1EN <= '1';
-									RAM1OE <= '1';
-									RAM1WE <= '1';
-									RAM1Data <= (others => 'Z');
-									state := 1;
-					when 1 => 	if (data_ready = '1') then
-										rdn <= '0';
-									end if;
-									state := 0;
-					when others => null;
-				end case;
+				if (addr /= "1011111100000001") then
+					case state is
+						when 0 => 	rdn <= '1';
+										RAM1EN <= '1';
+										RAM1OE <= '1';
+										RAM1WE <= '1';
+										RAM1Data <= (others => 'Z');
+										state <= 1;
+						when 1 => 	if (data_ready = '1') then
+											rdn <= '0';
+										end if;
+										state <= 0;
+						when others => null;
+					end case;
+				end if;
 			end if;
 			
 			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART write
@@ -98,56 +101,25 @@ begin
 					Ram1EN <= '1';
 					Ram1OE <= '1';
 					Ram1WE <= '1';
-					state_uart := 1;
+					state_uart <= 1;
+					RAM1Data <= data;
 				end if;
 				
 				if (state_uart = 1) then 
-					RAM1Data <= data;
-					state_uart := 2;
+					wrn <= '0';
+					state_uart <= 2;
 				end if;
-				
 			end if;	
 			
 			if (state_uart = 2) then 
-				wrn <= '0';
-				state_uart := 3;
-			end if;
-			
-			if (state_uart = 3) then 
 				wrn <= '1';
-				state_uart := 0;
-			end if;
-				
---				case state_uart is
---						when 0 => 	wrn <= '1';
---										Ram1EN <= '1';
---										Ram1OE <= '1';
---										Ram1WE <= '1';
---										RAM1Data <= data;
---										state_uart := 1;
---						when 1 => 	wrn <= '0';
---										state_uart := 2;
---						when 2 =>	wrn <= '1';
---										if (tsre = '1') and (tbre = '1') then
---											
---										end if;
---										state_uart := 0;
---						when others => null;
---				end case;
-
-			
-			
-			if (addr = "1011111100000001") then
-				if (tsre = '0') or (tbre = '0') then
-					data_out <= "1111111111111111";
-				else
-					data_out <= "0000000000000000";
+				if (tsre = '1') and (tbre = '1') then
+					state_uart <= 0;
 				end if;
-			else
-				data_out <= Ram1Data;
 			end if;
-			
-		end if;
+		end if;	
+		
+		
 		
 --		if (MEM_WE = '1') and (ACCMEM = '0') and (state = 1) then
 --			wrn <= not CLK;
@@ -159,12 +131,29 @@ begin
 			Ram1OE <= '0';
 			Ram1WE <= '0';
 			Ram1EN <= '0';
-			state := 0;
-			state_uart := 0;
-			wrn <= '1';
-			rdn <= '1';
+			state <= 0;
+			state_uart <= 0;
 		end if;
 		
 	end process;
-
+	process(Ram1Data,addr,tsre,tbre,data_ready)
+		begin
+			if (addr = "1011111100000001") then
+				data_out(15 downto 2) <= "00000000000000";
+				
+				if (tsre = '0') or (tbre = '0') then
+					data_out(0) <= '0';
+				else
+					data_out(0) <= '1';
+				end if;
+				
+				if (data_ready = '0') then
+					data_out(1) <= '0';
+				else
+					data_out(1) <= '1';
+				end if;
+			else
+				data_out <= Ram1Data;
+			end if;
+		end process;
 end Behavioral;
