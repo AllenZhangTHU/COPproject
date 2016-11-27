@@ -58,7 +58,7 @@ architecture Behavioral of EXE_MEM is
 begin
 	
   process(clk, rst)
-  begin
+  begin 
     if (rst = '0') then
       MEM_AccMEM <= '0';
       MEM_memWE <= '0';
