@@ -36,22 +36,24 @@ entity PCReg is
 		Port ( clk : in  STD_LOGIC;
 					 rst : in  STD_LOGIC;
 					 enable : in  STD_LOGIC;
-
+					 S : in STD_LOGIC;
 					 NPC : in  STD_LOGIC_VECTOR (15 downto 0);
 
 					 PC : out  STD_LOGIC_VECTOR (15 downto 0));
 end PCReg;
 
 architecture Behavioral of PCReg is
+	signal savedPC : STD_LOGIC_VECTOR (15 downto 0) := "1111111111111111";
 begin
+	PC <= savedPC;
 	process(clk, rst)
 	begin
 		if (rst = '0') then
-			PC <= "1111111111111111";
+			savedPC <= "1111111111111111";
 		else
 			if (clk'event and clk = '1') then
-				if (enable = '1') then
-					PC <= NPC;
+				if (enable = '1' and S = '0') then
+					savedPC <= NPC;
 				end if;
 			end if;
 		end if;

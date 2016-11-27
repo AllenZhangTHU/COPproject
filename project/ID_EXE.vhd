@@ -37,7 +37,7 @@ entity ID_EXE is
            rst : in  STD_LOGIC;
            enable : in  STD_LOGIC;
            bubble : in STD_LOGIC;
-
+			  S : in STD_LOGIC;
            ID_ALUIN1 : in  STD_LOGIC_VECTOR (15 downto 0);
            ID_ALUIN2 : in  STD_LOGIC_VECTOR (15 downto 0);
            ID_OP : in  STD_LOGIC_VECTOR (3 downto 0);
@@ -68,7 +68,7 @@ begin
 			EXE_regWE <= '0';
 		else
 			if (clk'event and clk = '1') then
-				if (enable = '1') then 
+				if (enable = '1' and S = '0') then 
 					EXE_ALUIN1 <= ID_ALUIN1;
 					EXE_ALUIN2 <= ID_ALUIN2;
 					EXE_OP <= ID_OP;

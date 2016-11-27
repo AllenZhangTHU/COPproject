@@ -30,7 +30,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity Sproducer is
-    Port ( ALUOUT : in  STD_LOGIC_VECTOR (15 downto 0);
+    Port ( ALUOUT : in  STD_LOGIC;
            ACCMEM : in  STD_LOGIC;
            MEMWE : in  STD_LOGIC;
            S : out  STD_LOGIC);
@@ -41,7 +41,7 @@ architecture Behavioral of Sproducer is
 begin
 	process(ALUOUT, ACCMEM, MEMWE)
 	begin
-		if (ALUOUT < "1000000000000000") then
+		if (ALUOUT='0') then
 			S <= ACCMEM or MEMWE;
 		else
 			S <= '0';

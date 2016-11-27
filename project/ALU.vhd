@@ -60,7 +60,7 @@ begin
 			when "1001" => ALUOUT <= to_stdlogicvector(to_bitvector(ALUIN1) rol conv_integer(ALUIN2));
 			when "1010" => ALUOUT <= ALUIN1;
 			when "1011" => ALUOUT <= ALUIN2;
-			when others => ALUOUT <= "0000000000000000";
+			when others => ALUOUT <= "1111111111111111";
 		end case;
 	end process;
 

@@ -43,24 +43,29 @@ entity EXE_MEM is
            EXE_memWE : in  STD_LOGIC;
            EXE_regWE : in  STD_LOGIC;
            EXE_DataIN : in  STD_LOGIC_VECTOR (15 downto 0);
+			  EXE_S : in STD_LOGIC;
 
            MEM_ALUOUT : out  STD_LOGIC_VECTOR (15 downto 0);
            MEM_Rd : out  STD_LOGIC_VECTOR (3 downto 0);
            MEM_AccMEM : out  STD_LOGIC;
            MEM_memWE : out  STD_LOGIC;
            MEM_regWE : out  STD_LOGIC;
-           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0)
+           MEM_DataIN : out  STD_LOGIC_VECTOR (15 downto 0);
+			  MEM_S : out STD_LOGIC
            );
 end EXE_MEM;
 
 architecture Behavioral of EXE_MEM is
+  signal S : STD_LOGIC := '0';
 begin
+  MEM_S <= S;
   process(clk, rst)
   begin
     if (rst = '0') then
       MEM_AccMEM <= '0';
       MEM_memWE <= '0';
       MEM_regWE <= '0';
+		S <= '0';
     else
       if (clk'event and clk = '1') then
         if (enable = '1') then
@@ -70,7 +75,14 @@ begin
           MEM_memWE <= EXE_memWE;
           MEM_regWE <= EXE_regWE;
           MEM_DataIN <= EXE_DataIN;
+			 S <= EXE_S;
         end if;
+		  if (S = '1') then
+			 MEM_AccMEM <= '0';
+			 MEM_memWE <= '0';
+			 MEM_regWE <= '0';
+			 S <= '0';
+		  end if;
       end if;
     end if;
   end process;

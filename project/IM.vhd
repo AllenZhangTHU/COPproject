@@ -63,7 +63,7 @@ begin
 						Ram2EN <= '0';
 						Ram2Addr(15 downto 0) <= PC;
 						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
-						state := '1';
+						state <= '1';
 					else
 						Ram2OE <= '1';
 						Ram2EN <= '1';
@@ -71,21 +71,19 @@ begin
 						Ram2Data <= "ZZZZZZZZZZZZZZZZ";
 					end if;
 				else
-					Inst <= Ram2Data;
-					state := '0';
+					state <= '0';
 				end if;
 			else
 				Ram2OE <= '1';
-				Inst <= "0000100000000000";
 				if (state='0') then
 					Ram2EN <= '0';
 					Ram2WE <= '1';
 					Ram2Addr(15 downto 0) <= PC;
 					Ram2Data <= DataIN;
-					state := '1';
+					state <= '1';
 				else
 					Ram2WE <= '0';
-					state := '0';
+					state <= '0';
 				end if;
 			end if;
 		end if;
@@ -94,6 +92,14 @@ begin
 			savedPC <= "1111111111111111";
 			Ram2EN <= '1';
 			Ram2OE <= '1';
+		end if;
+	end process;
+	process(Ram2Data, IMWE)
+	begin
+		if (IMWE='0') then
+			Inst <= Ram2Data;
+		else
+			Inst <= "0000100000000000";
 		end if;
 	end process;
 end Behavioral;

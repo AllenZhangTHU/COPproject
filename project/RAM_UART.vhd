@@ -10,6 +10,7 @@ entity RAM_UART is
 			RST : in STD_LOGIC;
 			ACCMEM : in  STD_LOGIC;
 			MEM_WE : in  STD_LOGIC;
+			S : in STD_LOGIC;
 			addr : in  STD_LOGIC_VECTOR (15 downto 0);
 			data : in  STD_LOGIC_VECTOR (15 downto 0);
 			data_out : out STD_LOGIC_VECTOR (15 downto 0);
@@ -33,9 +34,7 @@ architecture Behavioral of RAM_UART is
 	signal state : integer range 0 to 1 := 0;
 begin
 	process(CLK, RST, ACCMEM, MEM_WE, addr, data, data_ready, tbre, tsre)
-		
 	begin
-	
 		if (addr = "1011111100000000") or (addr = "1011111100000001") then
 			Ram_Uart_ctrl <= '0';
 		else
@@ -43,94 +42,88 @@ begin
 		end if;
 		
 		if (CLK'EVENT) and (CLK = '0') then
-			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '1') then --RAM write
-				case state is
-					when 0 => 	wrn <= '1';
-									rdn <= '1';
-									Ram1EN <= '0';
-									Ram1OE <= '1';
-									Ram1WE <= '1';
-									RAM1Addr(17 downto 16) <= "00";
-									RAM1Addr(15 downto 0) <= addr;
-									RAM1Data <= data;
-									state <= 1;
-					when 1 => 	Ram1WE <= '0';
-									state <= 0;
-					when others => null;
-				end case;
-			end if;
-			
-			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '1') then --RAM read
-				case state is
-					when 0 => 	wrn <= '1';
-									rdn <= '1';
-									Ram1EN <= '0';
-									Ram1OE <= '0';
-									Ram1WE <= '1';
-									RAM1Data <= (others => 'Z');
-									RAM1Addr(17 downto 16) <= "00";
-									RAM1Addr(15 downto 0) <= addr;
-									state <= 1;
-					when 1 => 	
-									state <= 0;
-					when others => null;
-				end case;
-			end if;
-			
-			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
-				if (addr /= "1011111100000001") then
+			if (S = '0') then
+				if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '1') then --RAM write
 					case state is
-						when 0 => 	rdn <= '1';
-										RAM1EN <= '1';
-										RAM1OE <= '1';
-										RAM1WE <= '1';
-										RAM1Data <= (others => 'Z');
+						when 0 => 	wrn <= '1';
+										rdn <= '1';
+										Ram1EN <= '0';
+										Ram1OE <= '1';
+										Ram1WE <= '1';
+										RAM1Addr(17 downto 16) <= "00";
+										RAM1Addr(15 downto 0) <= addr;
+										RAM1Data <= data;
 										state <= 1;
-						when 1 => 	if (data_ready = '1') then
-											rdn <= '0';
-										end if;
+						when 1 => 	Ram1WE <= '0';
 										state <= 0;
 						when others => null;
 					end case;
 				end if;
-			end if;
-			
-			if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART write
-				if (state_uart = 0) then 
-					wrn <= '1';
-					Ram1EN <= '1';
-					Ram1OE <= '1';
-					Ram1WE <= '1';
-					state_uart <= 1;
-					RAM1Data <= data;
+				
+				if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '1') then --RAM read
+					case state is
+						when 0 => 	wrn <= '1';
+										rdn <= '1';
+										Ram1EN <= '0';
+										Ram1OE <= '0';
+										Ram1WE <= '1';
+										RAM1Data <= (others => 'Z');
+										RAM1Addr(17 downto 16) <= "00";
+										RAM1Addr(15 downto 0) <= addr;
+										state <= 1;
+						when 1 => 	
+										state <= 0;
+						when others => null;
+					end case;
 				end if;
 				
-				if (state_uart = 1) then 
-					wrn <= '0';
-					state_uart <= 2;
+				if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
+					if (addr /= "1011111100000001") then
+						case state is
+							when 0 => 	rdn <= '1';
+											RAM1EN <= '1';
+											RAM1OE <= '1';
+											RAM1WE <= '1';
+											RAM1Data <= (others => 'Z');
+											state <= 1;
+							when 1 => 	if (data_ready = '1') then
+												rdn <= '0';
+											end if;
+											state <= 0;
+							when others => null;
+						end case;
+					end if;
 				end if;
-			end if;	
-			
-			if (state_uart = 2) then 
-				wrn <= '1';
-				if (tsre = '1') and (tbre = '1') then
-					state_uart <= 0;
+				
+				if (MEM_WE = '1') and (ACCMEM = '0') and (Ram_Uart_ctrl = '0') then --UART write
+					if (state_uart = 0) then 
+						wrn <= '1';
+						Ram1EN <= '1';
+						Ram1OE <= '1';
+						Ram1WE <= '1';
+						state_uart <= 1;
+						RAM1Data <= data;
+					end if;
+					
+					if (state_uart = 1) then 
+						wrn <= '0';
+						state_uart <= 2;
+					end if;
+				end if;	
+				
+				if (state_uart = 2) then 
+					wrn <= '1';
+					if (tsre = '1') and (tbre = '1') then
+						state_uart <= 0;
+					end if;
 				end if;
 			end if;
 		end if;	
 		
-		
-		
---		if (MEM_WE = '1') and (ACCMEM = '0') and (state = 1) then
---			wrn <= not CLK;
---		else
---			wrn <= '1';
---		end if;
-		
 		if (RST = '0') then
-			Ram1OE <= '0';
-			Ram1WE <= '0';
-			Ram1EN <= '0';
+			Ram1OE <= '1';
+			Ram1WE <= '1';
+			Ram1EN <= '1';
 			state <= 0;
 			state_uart <= 0;
 		end if;

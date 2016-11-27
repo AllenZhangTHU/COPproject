@@ -36,7 +36,7 @@ entity IF_ID is
 	Port ( clk : in  STD_LOGIC;
 			 rst : in  STD_LOGIC;
 			 enable : in  STD_LOGIC;
-
+			 S : in STD_LOGIC;
 			 IF_Inst : in  STD_LOGIC_VECTOR (15 downto 0);
 			 IF_NPC  :in STD_LOGIC_VECTOR(15 DOWNTO 0);
 
@@ -54,7 +54,7 @@ begin
 		ID_NPC <= "0000000000000000";
 	else
 		if (clk'event and clk = '1') then
-			if (enable = '1')then
+			if (enable = '1' and S = '0')then
 				ID_Inst <= IF_Inst;
 				ID_NPC <= IF_NPC;
 			end if;
