@@ -78,19 +78,17 @@ begin
 			end if;
 			if (MEM_WE = '0') and (ACCMEM = '0')then
 				rdn <= '1';
-			end ifs
+			end if;
 			if (MEM_WE = '0') and (ACCMEM = '1') and (Ram_Uart_ctrl = '0') then --UART read
 				if (addr /= "1011111100000001") then
 					case state is
-						when 0 => 	rdn <= '1';
+						when 0 => 	rdn <= '0';
 										RAM1EN <= '1';
 										RAM1OE <= '1';
 										RAM1WE <= '1';
 										RAM1Data <= (others => 'Z');
 										state <= 1;
-						when 1 => 	if (data_ready = '1') then
-											rdn <= '0';
-										end if;
+						when 1 => 	rdn <= '1';
 										state <= 0;
 						when others => null;
 					end case;

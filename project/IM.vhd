@@ -68,7 +68,7 @@ begin
 					Ram2Data <= "ZZZZZZZZZZZZZZZZ";
 				end if;
 			else
-				Inst <= Ram2Data;
+				
 				state <= '0';
 			end if;
 		end if;
@@ -78,6 +78,10 @@ begin
 			Ram2EN <= '1';
 			Ram2OE <= '1';
 		end if;
+	end process;
+	process (Ram2data)
+	begin
+		Inst <= Ram2Data;
 	end process;
 end Behavioral;
 
