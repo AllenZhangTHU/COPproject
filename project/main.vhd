@@ -285,7 +285,8 @@ component PCReg is
 
            PC : out  STD_LOGIC_VECTOR (15 downto 0);
 			  
-					 MEM_RAM2: in STD_LOGIC
+					 MEM_RAM2: in STD_LOGIC;
+					 L:out STD_LOGIC_VECTOR (15 downto 0)
            
            );
 end component;
@@ -322,8 +323,7 @@ component RF is
            clk : in  STD_LOGIC;
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
-           B : out  STD_LOGIC_VECTOR (15 downto 0);
-			   L :out  STD_LOGIC_VECTOR (15 downto 0)
+           B : out  STD_LOGIC_VECTOR (15 downto 0)
 			  );
 end component;
 
@@ -371,9 +371,9 @@ Imm_module:Imm PORT MAP(Immctrl,ID_Inst(10 downto 0),ID_Imm);
 MEM_WB_module:MEM_WB PORT MAP(CLK0 ,RESET ,'1' ,MEM_MEMOUT ,MEM_Rd ,MEM_regWE ,WB_MEMOUT ,WB_Rd ,WB_regWE);
 MEMMUX_module:MEMMUX PORT MAP(MEM_ALUOUT ,DataOUT ,MEM_AccMEM ,MEM_MEMOUT,ID_Inst,MEM_RAM2);
 PCMUX_module:PCMUX PORT MAP(IF_NPC ,ID_A ,adderOUT ,PCctrl ,PCIN);
-PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC,MEM_RAM2);
+PCReg_module:PCReg PORT MAP(CLK0 ,RESET ,PCReg_enable ,PCIN ,PC,MEM_RAM2,L);
 RAM_UART_module:RAM_UART PORT MAP(CLK1 ,RESET,MEM_AccMEM ,MEM_memWE ,MEM_ALUOUT ,MEM_DataIN ,DataOUT,RAM1ADDR ,RAM1DATA ,RAM1OE ,RAM1WE ,RAM1EN ,wrn ,rdn,data_ready,tbre,tsre,MEM_RAM2);
-RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0,L);
+RF_module:RF PORT MAP(WB_regWE ,RFctrl ,WB_MEMOUT ,WB_Rd ,ID_Inst(10 downto 5) ,CLK0 ,RESET ,ID_A0 ,ID_B0);
 T_module:T PORT MAP(CLK0,RESET, ID_TE, ID_newT,ID_T);
 Adder_module:Adder PORT MAP(ID_NPC, ID_Imm,adderOUT);
 PC_Adder_module:PC_Adder PORT MAP(PC,IF_NPC);
@@ -390,9 +390,17 @@ begin
 	end if;
 end process;
 
-
-	CLK1 <= CLK2;
-
+process(CLK2)
+begin
+	if (CLK2'event and CLK2 = '1') then
+		if (state1 = '0') then
+			CLK1 <= '1';
+		else
+			CLK1 <= '0';
+		end if;
+		state1 <= not state1;
+	end if;
+end process;
 
 end Behavioral;
 

@@ -42,7 +42,7 @@ entity RF is
            rst : in  STD_LOGIC;
            A : out  STD_LOGIC_VECTOR (15 downto 0);
            B : out  STD_LOGIC_VECTOR (15 downto 0);
-			  L :out  STD_LOGIC_VECTOR (15 downto 0)
+			  l:out  STD_LOGIC_VECTOR (15 downto 0)
 			  );
 end RF;
 

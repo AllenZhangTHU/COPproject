@@ -39,12 +39,14 @@ entity PCReg is
 
 					 NPC : in  STD_LOGIC_VECTOR (15 downto 0);
 
-					 PC : out  STD_LOGIC_VECTOR (15 downto 0);
-					 MEM_RAM2: in STD_LOGIC);
+					 PC : BUFFER  STD_LOGIC_VECTOR (15 downto 0);
+					 MEM_RAM2: in STD_LOGIC;
+					 l : out  STD_LOGIC_VECTOR (15 downto 0));
 end PCReg;
 
 architecture Behavioral of PCReg is
 begin
+L <= pc;
 	process(clk, rst)
 	begin
 		if (rst = '0') then
